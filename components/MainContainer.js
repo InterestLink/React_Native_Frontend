@@ -3,6 +3,7 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { View, Text } from "react-native";
 
 // Screens
 import DefaultHome from "./screens/DefaultHome";
@@ -13,6 +14,27 @@ const defaultHomeName = "Home";
 const feedName = "Feed";
 
 const Tab = createBottomTabNavigator();
+
+// Custom Header Component used below
+function CustomHeader() {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 10,
+        backgroundColor: "tomato",
+      }}
+    >
+    <Ionicons name="link" size={24} color="white" style={{ marginRight: 10 }} />
+    <Text style={
+        { fontSize: 20, color: "white", fontWeight: "bold" }}>
+        InterestLink
+    </Text>
+    </View>
+  );
+}
 
 export default function MainContainer() {
   return (
@@ -35,6 +57,7 @@ export default function MainContainer() {
           tabBarActiveTintColor: "tomato",
           tabBarInactiveTintColor: "gray",
           tabBarStyle: { paddingBottom: 5, height: 60 },
+          header: () => <CustomHeader />,
         })}
       >
         <Tab.Screen name={defaultHomeName} component={DefaultHome} />
