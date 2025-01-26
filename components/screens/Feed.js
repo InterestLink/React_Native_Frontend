@@ -5,10 +5,7 @@ import StyleExample from '../styles/StyleExample';
 export default function Feed({navigation}) {
     return (
         <View style={StyleExample.container}>
-            <Text
-                onPress={() => navigation.navigation('DefaultHome')}
-                >In Feed, click to go to DefaultHome</Text>
-            <StatusBar style="auto" />
+            <Text>In Feed</Text>
         </View>
     )
 }
