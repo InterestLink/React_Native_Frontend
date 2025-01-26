@@ -6,7 +6,6 @@ export default function DefaultHome({navigation}) {
     return (
         <View style={StyleExample.container}>
             <Text>In DefaultHome</Text>
-           
         </View>
     )
 }

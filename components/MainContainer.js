@@ -6,12 +6,16 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { View, Text } from "react-native";
 
 // Screens
-import DefaultHome from "./screens/DefaultHome";
-import Feed from "./screens/Feed";
+import Community from "./screens/Community";
+import Home from "./screens/Home";
+import Search from "./screens/Search";
+import Profile from "./screens/Profile";
 
 // Screen names
-const defaultHomeName = "Home";
-const feedName = "Feed";
+const communityName = "Communities";
+const homeName = "Home";
+const searchName = "Search";
+const profileName = "Profile";
 
 const Tab = createBottomTabNavigator();
 
@@ -27,11 +31,15 @@ function CustomHeader() {
         backgroundColor: "tomato",
       }}
     >
-    <Ionicons name="link" size={24} color="white" style={{ marginRight: 10 }} />
-    <Text style={
-        { fontSize: 20, color: "white", fontWeight: "bold" }}>
+      <Ionicons
+        name="link"
+        size={24}
+        color="white"
+        style={{ marginRight: 10 }}
+      />
+      <Text style={{ fontSize: 20, color: "white", fontWeight: "bold" }}>
         InterestLink
-    </Text>
+      </Text>
     </View>
   );
 }
@@ -40,16 +48,20 @@ export default function MainContainer() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName={feedName}
+        initialRouteName={homeName}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
             let rn = route.name;
 
-            if (rn === defaultHomeName) {
+            if (rn === homeName) {
               iconName = focused ? "home" : "home-outline";
-            } else if (rn === feedName) {
-              iconName = focused ? "list" : "list-outline";
+            } else if (rn === searchName) {
+              iconName = focused ? "search" : "search-outline";
+            } else if (rn === communityName) {
+              iconName = focused ? "earth" : "earth-outline";
+            } else if (rn === profileName) {
+              iconName = focused ? "person" : "person-outline";
             }
 
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -60,8 +72,10 @@ export default function MainContainer() {
           header: () => <CustomHeader />,
         })}
       >
-        <Tab.Screen name={defaultHomeName} component={DefaultHome} />
-        <Tab.Screen name={feedName} component={Feed} />
+        <Tab.Screen name={homeName} component={Home} />
+        <Tab.Screen name={searchName} component={Search} />
+        <Tab.Screen name={communityName} component={Community} />
+        <Tab.Screen name={profileName} component={Profile} />
       </Tab.Navigator>
     </NavigationContainer>
   );
