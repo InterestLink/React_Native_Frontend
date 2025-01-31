@@ -3,7 +3,6 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { View, Text } from "react-native";
 
 // Screens
 import Community from "./screens/Community";
@@ -46,7 +45,7 @@ export default function MainContainer() {
           },
           tabBarActiveTintColor: "tomato",
           tabBarInactiveTintColor: "gray",
-          tabBarStyle: { paddingBottom: 5, height: 80 },
+          tabBarStyle: { paddingBottom: 5, height: 80, paddingTop: 15 },
           header: () => <MainHeader />,
         })}
       >

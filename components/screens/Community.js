@@ -1,17 +1,10 @@
 import * as React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import Style from '../styles/Style';
-import { useFonts } from 'expo-font';
 
 export default function Community({navigation}) {
     return (
         <View style={Style.container}>
-          {/* Header */}
-          <View style={Style.header}>
-            <View style={Style.logoContainer}>
-              <Text style={Style.logo}>InterestLink</Text>
-            </View>
-          </View>
     
           {/* Main Content */}
           <ScrollView contentContainerStyle={Style.content}>
