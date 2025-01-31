@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { View, Text, FlatList } from "react-native";
-import PostCard from "../subcomponents/PostCard";
+import PostCard from "../sub_components/PostCard";
 import StyleExample from "../styles/StyleExample";
 
 export default function Home({ navigation }) {

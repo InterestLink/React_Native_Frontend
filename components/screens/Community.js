@@ -4,18 +4,12 @@ import Style from '../styles/Style';
 import { useFonts } from 'expo-font';
 
 export default function Community({navigation}) {
-    const [fontsLoaded] = useFonts({
-        'le-murmure': require('../../assets/fonts/le-murmure.ttf'),
-    });
-    if (!fontsLoaded) {
-        return null;
-      }
     return (
-        <View style={Style.container}>
+        <View style={CommunityStyle.container}>
           {/* Header */}
-          <View style={Style.header}>
-            <View style={Style.logoContainer}>
-              <Text style={Style.logo}>InterestLink</Text>
+          <View style={CommunityStyle.header}>
+            <View style={CommunityStyle.logoContainer}>
+              <Text style={CommunityStyle.logo}>InterestLink</Text>
             </View>
           </View>
     

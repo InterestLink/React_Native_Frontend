@@ -11,6 +11,9 @@ import Home from "./screens/Home";
 import Search from "./screens/Search";
 import Profile from "./screens/Profile";
 
+// Sub Components
+import MainHeader from "./sub_components/MainHeader";
+
 // Screen names
 const communityName = "Communities";
 const homeName = "Home";
@@ -18,31 +21,6 @@ const searchName = "Search";
 const profileName = "Profile";
 
 const Tab = createBottomTabNavigator();
-
-// Custom Header Component used below
-function CustomHeader() {
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 10,
-        backgroundColor: "tomato",
-      }}
-    >
-      <Ionicons
-        name="link"
-        size={24}
-        color="white"
-        style={{ marginRight: 10 }}
-      />
-      <Text style={{ fontSize: 20, color: "white", fontWeight: "bold" }}>
-        InterestLink
-      </Text>
-    </View>
-  );
-}
 
 export default function MainContainer() {
   return (
@@ -69,7 +47,7 @@ export default function MainContainer() {
           tabBarActiveTintColor: "tomato",
           tabBarInactiveTintColor: "gray",
           tabBarStyle: { paddingBottom: 5, height: 60 },
-          header: () => <CustomHeader />,
+          header: () => <MainHeader />,
         })}
       >
         <Tab.Screen name={homeName} component={Home} />
