@@ -11,20 +11,8 @@ const userBio = "Bio goes here!"
 
 export default function Profile({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
-    const [fontsLoaded] = useFonts({
-            'le-murmure': require('../../assets/fonts/le-murmure.ttf'),
-        });
-        if (!fontsLoaded) {
-            return null;
-          }
     return (
         <View style={ProfileStyle.container}>
-          {/* Header */}
-          <View style={ProfileStyle.header}>
-            <View style={ProfileStyle.logoContainer}>
-            <Text style={ProfileStyle.logo}>InterestLink</Text>
-            </View>
-          </View>
           <View style = {ProfileStyle.profileImageContainer}>
             <Image source={require('../../assets/images/default_pfp.jpg')} style={ProfileStyle.profileImage} />
             <Text style={ProfileStyle.profileText}>{"\n"}{username}</Text>
