@@ -5,6 +5,7 @@ const ProfileStyle = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+        padding: 15
       },
       header: {
         flexDirection: 'row',
@@ -15,7 +16,6 @@ const ProfileStyle = StyleSheet.create({
       },
       logoContainer: {
         padding: 8,
-        
       },
       logo: {
         color: '#000',
@@ -23,7 +23,6 @@ const ProfileStyle = StyleSheet.create({
         fontFamily: 'le-murmure',
       },
       profileImage: {
-        marginTop: 10,
         width: 100,
         height: 100,
         borderRadius: 50

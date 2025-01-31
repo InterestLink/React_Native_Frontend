@@ -13,12 +13,11 @@ export default function Profile({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     return (
         <View style={ProfileStyle.container}>
-          <View style = {ProfileStyle.profileImageContainer}>
             <Image source={require('../../assets/images/default_pfp.jpg')} style={ProfileStyle.profileImage} />
             <Text style={ProfileStyle.profileText}>{"\n"}{username}</Text>
-            <Text style={ProfileStyle.profileText}>{followerCount}{"\n"}</Text>
             <Text style={ProfileStyle.profileText}>{userBio}{"\n"}</Text>
-            </View>
+
+            
           </View>
     )
 }
