@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { useFonts } from 'expo-font';
 
-const CommunityStyle = StyleSheet.create({
+const Style = StyleSheet.create({
   
   container: {
     flex: 1,
@@ -90,4 +90,4 @@ const CommunityStyle = StyleSheet.create({
   },
 });
 
-export default CommunityStyle;
+export default Style;

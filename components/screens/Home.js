@@ -1,14 +1,28 @@
 import * as React from "react";
 import { useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, FlatList } from "react-native";
+import PostCard from "../subcomponents/PostCard";
 import StyleExample from "../styles/StyleExample";
 
 export default function Home({ navigation }) {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  //const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const posts = [
+    {
+      id: "1",
+      username: "chief keef",
+      content: "All these damn frenemies, I'm gon' call up PooPoo Man",
+      image: "https://example.com/image1.jpg",
+    },
+    {
+      id: "2",
+      username: "user2",
+      content: "#kony2012",
+    },
+  ];
 
-  const fetchHelloWorld = async () => {
+  /*const fetchHelloWorld = async () => {
     try {
       const response = await fetch(
         "https://y5pyf47rw4.execute-api.us-east-2.amazonaws.com/dev/helloWorld"
@@ -41,11 +55,15 @@ export default function Home({ navigation }) {
         <Text>Error: {error.message}</Text>
       </View>
     );
-  }
+  }*/
 
   return (
-    <View style={StyleExample.container}>
-      {data ? <Text>{data.body}</Text> : <Text>No message received</Text>}
-    </View>
+    <View>
+        <FlatList
+          data={posts}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <PostCard {...item} />}
+        />
+      </View>
   );
 }
