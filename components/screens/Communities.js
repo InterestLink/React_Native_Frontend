@@ -7,7 +7,7 @@ import CommunityCard from "../sub_components/CommunityCard.js"
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
-    backgroundColor: '#f0f0f0'
+
   },
   content: {
     padding: 10,
