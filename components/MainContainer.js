@@ -46,7 +46,7 @@ export default function MainContainer() {
           },
           tabBarActiveTintColor: "tomato",
           tabBarInactiveTintColor: "gray",
-          tabBarStyle: { paddingBottom: 5, height: 60 },
+          tabBarStyle: { paddingBottom: 5, height: 80 },
           header: () => <MainHeader />,
         })}
       >
