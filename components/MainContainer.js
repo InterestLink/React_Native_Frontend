@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // Screens
-import Community from "./screens/Community";
+import Communities from "./screens/Communities";
 import Home from "./screens/Home";
 import Search from "./screens/Search";
 import Profile from "./screens/Profile";
@@ -51,7 +51,7 @@ export default function MainContainer() {
       >
         <Tab.Screen name={homeName} component={Home} />
         <Tab.Screen name={searchName} component={Search} />
-        <Tab.Screen name={communityName} component={Community} />
+        <Tab.Screen name={communityName} component={Communities} />
         <Tab.Screen name={profileName} component={Profile} />
       </Tab.Navigator>
     </NavigationContainer>
