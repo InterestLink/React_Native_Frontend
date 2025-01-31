@@ -44,6 +44,7 @@ export default function Communities({ navigation }) {
         contentContainerStyle={styles.content}
         bounces={false}
         overScrollMode="never"
+        showsVerticalScrollIndicator={false}
       >
         {communities.map((community) => (
           <CommunityCard 
