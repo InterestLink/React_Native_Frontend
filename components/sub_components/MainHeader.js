@@ -9,7 +9,6 @@ const HeaderStyle = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 16,
-        paddingTop: 20, 
         borderBottomWidth: 1,
         borderColor: '#ddd',
         backgroundColor: '#fff', 
