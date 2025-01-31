@@ -5,11 +5,11 @@ import { useFonts } from 'expo-font';
 
 export default function Community({navigation}) {
     return (
-        <View style={CommunityStyle.container}>
+        <View style={Style.container}>
           {/* Header */}
-          <View style={CommunityStyle.header}>
-            <View style={CommunityStyle.logoContainer}>
-              <Text style={CommunityStyle.logo}>InterestLink</Text>
+          <View style={Style.header}>
+            <View style={Style.logoContainer}>
+              <Text style={Style.logo}>InterestLink</Text>
             </View>
           </View>
     
