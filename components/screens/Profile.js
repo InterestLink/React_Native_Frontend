@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Communities from './Communities';
-import ProfilePosts from '../sub_components/ProfilePosts'; // Import ProfilePosts component
+import CommunityList from '../sub_components/CommunityList';
+import ProfilePosts from '../sub_components/ProfilePosts'; 
 
 const Profile = ({ navigation }) => {
   // Dummy data
   const username = "Username";
-  const userBio = "Bio goes here!";
-
+  const userBio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis vel tellus in maximus. Nam pulvinar nulla non finibus aliquam.";
+  
   // State to manage the selected view
-  const [selectedView, setSelectedView] = useState('Posts'); // Default view is 'Posts'
+  const [selectedView, setSelectedView] = useState('Posts');
 
   // Content for each view
   const renderContent = () => {
@@ -18,7 +18,7 @@ const Profile = ({ navigation }) => {
       case 'Posts':
         return <ProfilePosts />;
       case 'Communities':
-        return <Communities />;
+        return <CommunityList />;
       case 'Followers':
         return <Text>Here is the list of followers...</Text>;
       case 'Following':
