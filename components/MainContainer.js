@@ -3,7 +3,6 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // Screens
@@ -12,7 +11,7 @@ import CommunityPage from "./screens/CommunityPage";
 import Home from "./screens/Home";
 import Search from "./screens/Search";
 import Profile from "./screens/Profile";
-import EditProfile from "./screens/EditProfile";
+// import EditProfile from "./screens/EditProfile";
 
 // Sub Components
 import MainHeader from "./sub_components/MainHeader";
