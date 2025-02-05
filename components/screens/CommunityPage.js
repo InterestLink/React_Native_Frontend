@@ -8,7 +8,6 @@ export default function CommunityPage({ route }) {
     <View style={styles.container}>
       <Image source={{ uri: community.icon }} style={styles.image} />
       <Text style={styles.title}>{community.name}</Text>
-      <Text style={styles.members}>Members: 581</Text>
       <Text style={styles.description}>
         More details about {community.name} will be displayed here.
       </Text>
