@@ -1,22 +1,25 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-const CommunityCard = ({ name, icon }) => {
+const CommunityCard = ({ name, icon, onPress }) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.iconWrapper}>
-        <Image source={{ uri: icon }} style={styles.icon} />
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+      <View style={styles.container}>
+        <View style={styles.iconWrapper}>
+          <Image source={{ uri: icon }} style={styles.icon} />
+        </View>
+        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.name}>
+          {name}
+        </Text>
       </View>
-      <Text numberOfLines={1} ellipsizeMode="tail" style={styles.name}>
-        {name}
-      </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    width: 300,
     alignItems: 'center',
     backgroundColor: '#f8f9fa',
     borderRadius: 16,
