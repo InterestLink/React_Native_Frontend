@@ -1,40 +1,28 @@
 import * as React from 'react';
-import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 
 // Sub Components
-import CommunityList from '../sub_components/CommunityList';
-import RecommendedCommunityCard from '../sub_components/RecommendedCommunityCard.js';
+import CommunityCard from "./CommunityCard.js"
 
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+
+  },
+  content: {
     padding: 10,
     flexWrap: 'wrap',
-    flexDirection: "column",
     justifyContent: 'space-between',
     flexGrow: 1,
   },
   cardWrapper: {
-    width: 300, 
+    width: 150, 
     height: 120, 
     marginBottom: 10,
-    marginLeft: 5,
-  },
-  recommendedContainer: {
-    marginBottom: 20,
-  },
-  recommendedScroll: {
-    paddingLeft: 5,
-  },
-  communityListContainer: {
-    flex: 1,
   },
 });
 
-export default function Communities({navigation}) {
-
+export default function Communities({ navigation }) {
   const communities = [
     { id: 1, name: 'Gaming Hub', icon: 'https://picsum.photos/500/500?random=1' },
     { id: 2, name: 'React Native Devs', icon: 'https://picsum.photos/200/300?random=2' },
@@ -50,7 +38,6 @@ export default function Communities({navigation}) {
     { id: 12, name: 'Outdoor Adventurers', icon: 'https://picsum.photos/200/300?random=12' }
   ];
 
-export default function Communities({ navigation }) {
   return (
     <View style={styles.pageContainer}>
       <ScrollView
@@ -60,16 +47,11 @@ export default function Communities({ navigation }) {
         showsVerticalScrollIndicator={false}
       >
         {communities.map((community) => (
-          <TouchableOpacity
-            key={community.id}
-            style={styles.cardWrapper} // for spacing
-            onPress={() => navigation.navigate('CommunityPage', { community })}
-          >  
-            <CommunityCard 
-              name={community.name} 
-              icon={community.icon} 
-            />
-          </TouchableOpacity>
+          <CommunityCard 
+            key={community.id} 
+            name={community.name} 
+            icon={community.icon} 
+          />
         ))}
       </ScrollView>
     </View>

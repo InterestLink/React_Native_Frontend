@@ -3,6 +3,7 @@ import { useState } from "react";
 import { View, Text, FlatList } from "react-native";
 import PostCard from "../sub_components/PostCard";
 import StyleExample from "../styles/StyleExample";
+import { getHelloWorld } from "../../services/api";
 
 export default function Home({ navigation }) {
   const [data, setData] = useState(null);
@@ -13,15 +14,25 @@ export default function Home({ navigation }) {
       id: "1",
       username: "chief keef",
       content: "All these damn frenemies, I'm gon' call up PooPoo Man",
-      image: "https://example.com/image1.jpg",
     },
     {
       id: "2",
       username: "user2",
       content: "#kony2012",
     },
+    {
+      id: "3",
+      username: "keenan",
+      content: "erm what the figma",
+    },
   ];
 
+  // this works and i dont know why
+  // big javascript is out to get me
+  getHelloWorld().then((message) => {
+    console.log(message);
+  });
+  
   /*const fetchHelloWorld = async () => {
     try {
       const response = await fetch(

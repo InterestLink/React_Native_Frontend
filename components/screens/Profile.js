@@ -1,18 +1,51 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Communities from './Communities';
-import ProfilePosts from '../sub_components/ProfilePosts'; // Import ProfilePosts component
+import CommunityList from '../sub_components/CommunityList';
+import ProfilePosts from '../sub_components/ProfilePosts'; 
 
 const Profile = ({ navigation }) => {
   // Dummy data
-  const firstName = "First";
-  const lastName = "Last";
+  const displayName = "First Last";
   const username = "Username";
-  const userBio = "Bio goes here!";
-
+  const userBio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis vel tellus in maximus. Nam pulvinar nulla non finibus aliquam.";
+  
   // State to manage the selected view
-  const [selectedView, setSelectedView] = useState('Posts'); // Default view is 'Posts'
+  const [selectedView, setSelectedView] = useState('Posts');
+
+  // Handle share icon click
+  const handleShare = () => {
+    Alert.alert(
+      "Share",
+      "Choose an option:",
+      [
+        {
+        text: "Copy Username",
+        onPress: () => {
+          // Placeholder for copy to clipboard functionality
+          Alert.alert("Copied", "Username copied to clipboard.");
+        },
+      },
+      {
+        text: "Share",
+        onPress: () => {
+          // Placeholder for sharing via social media apps or messaging
+          Alert.alert("Share", "Sharing via social media or messaging...");
+        },
+      },
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      ],
+      { cancelable: true }
+    );
+  };
+  
+  // Handle edit icon click
+  const handleEdit = () => {
+    navigation.navigate('EditProfile'); //Navigate to EditProfile screen
+  };
 
   // Content for each view
   const renderContent = () => {
@@ -20,7 +53,7 @@ const Profile = ({ navigation }) => {
       case 'Posts':
         return <ProfilePosts />;
       case 'Communities':
-        return <Communities />;
+        return <CommunityList />;
       case 'Followers':
         return <Text>Here is the list of followers...</Text>;
       case 'Following':
@@ -43,19 +76,25 @@ const Profile = ({ navigation }) => {
             style={styles.profileImage} 
           />
           <View style={styles.textContainer}>
-            <Text style={styles.nameText}>{firstName} {lastName}</Text>
-            <Text style={styles.usernameText}>{username}</Text>
-          </View>
-          <View style={styles.iconContainer}>
+            <View style={styles.nameAndEditContainer}>
+              <Text style={styles.nameText}>{displayName}</Text>
+              <TouchableOpacity onPress={handleEdit}>
               <Image
                 source={require('../../assets/images/icons8-edit-24.png')}
                 style={styles.icon}
               />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.usernameAndShareContainer}>
+              <Text style={styles.usernameText}>@{username}</Text>
+              <TouchableOpacity onPress={handleShare}>
               <Image
                 source={require('../../assets/images/icons8-share-24.png')}
                 style={styles.icon}
               />
-          </View>
+              </TouchableOpacity>
+              </View>
+              </View>
         </View>
         {/* Bio */}
         <Text style={styles.bioText}>{userBio}</Text>
@@ -134,22 +173,28 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     justifyContent: 'center',
   },
+  nameAndEditContainer: {
+    flexDirection: 'row', // Align name and edit icon in a row
+    alignItems: 'center',
+  },
+  usernameAndShareContainer: {
+    flexDirection: 'row', // Align username and share icon in a row
+    alignItems: 'center',
+  },
   nameText: {
     fontSize: 20,
     fontWeight: 'bold',
+    marginRight: 8, // Space between the name and the edit icon
   },
   usernameText: {
     fontSize: 16,
     fontWeight: 'bold',
+    marginRight: 8, // Space between the username and the share icon
   },
   bioText: {
     fontSize: 16,
     color: '#555',
     marginTop: 8, // Space between the row and the bio
-  },
-  iconContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   icon: {
     width: 24,
