@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 // Sub Components
 import CommunityCard from "../sub_components/CommunityCard.js"
@@ -12,17 +13,19 @@ const styles = StyleSheet.create({
   content: {
     padding: 10,
     flexWrap: 'wrap',
+    flexDirection: "column",
     justifyContent: 'space-between',
     flexGrow: 1,
   },
   cardWrapper: {
-    width: 150, 
+    width: 300, 
     height: 120, 
     marginBottom: 10,
   },
 });
 
-export default function Communities({ navigation }) {
+export default function Communities({navigation}) {
+
   const communities = [
     { id: 1, name: 'Gaming Hub', icon: 'https://picsum.photos/500/500?random=1' },
     { id: 2, name: 'React Native Devs', icon: 'https://picsum.photos/200/300?random=2' },
@@ -47,11 +50,16 @@ export default function Communities({ navigation }) {
         showsVerticalScrollIndicator={false}
       >
         {communities.map((community) => (
-          <CommunityCard 
-            key={community.id} 
-            name={community.name} 
-            icon={community.icon} 
-          />
+          <TouchableOpacity
+            key={community.id}
+            style={styles.cardWrapper} // for spacing
+            onPress={() => navigation.navigate('CommunityPage', { community })}
+          >  
+            <CommunityCard 
+              name={community.name} 
+              icon={community.icon} 
+            />
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>

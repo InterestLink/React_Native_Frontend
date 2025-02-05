@@ -2,10 +2,12 @@ import * as React from "react";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // Screens
 import Communities from "./screens/Communities";
+import CommunityPage from "./screens/CommunityPage";
 import Home from "./screens/Home";
 import Search from "./screens/Search";
 import Profile from "./screens/Profile";
@@ -20,6 +22,20 @@ const searchName = "Search";
 const profileName = "Profile";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+
+// Stack Navigator for Communities
+function CommunitiesStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Communities" component={Communities} />
+      <Stack.Screen name="CommunityPage" component={CommunityPage} />
+    </Stack.Navigator>
+  );
+}
+
+
 
 export default function MainContainer() {
   return (
@@ -51,7 +67,7 @@ export default function MainContainer() {
       >
         <Tab.Screen name={homeName} component={Home} />
         <Tab.Screen name={searchName} component={Search} />
-        <Tab.Screen name={communityName} component={Communities} />
+        <Tab.Screen name={communityName} component={CommunitiesStack} />
         <Tab.Screen name={profileName} component={Profile} />
       </Tab.Navigator>
     </NavigationContainer>
