@@ -50,7 +50,8 @@ export default function Communities({ navigation }) {
           <CommunityCard 
             key={community.id} 
             name={community.name} 
-            icon={community.icon} 
+            icon={community.icon}
+            onPress={() => navigation.navigate('CommunityPage', { community })} 
           />
         ))}
       </ScrollView>
