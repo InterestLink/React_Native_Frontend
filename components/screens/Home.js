@@ -1,80 +1,81 @@
-import * as React from "react";
-import { useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import React, { useState } from "react";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import PostCard from "../sub_components/PostCard";
 import StyleExample from "../styles/StyleExample";
 import { getHelloWorld } from "../../services/api";
 
 export default function Home({ navigation }) {
-  const [data, setData] = useState(null);
-  //const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [selectedCommunity, setSelectedCommunity] = useState("All");
+
   const posts = [
-    {
-      id: "1",
-      username: "chief keef",
-      content: "All these damn frenemies, I'm gon' call up PooPoo Man",
-    },
-    {
-      id: "2",
-      username: "user2",
-      content: "#kony2012",
-    },
-    {
-      id: "3",
-      username: "keenan",
-      content: "erm what the figma",
-    },
+    { community: "TestCommunity", id: "1", username: "chief keef", content: "All these damn frenemies, I'm gon' call up PooPoo Man" },
+    { community: "Kony2012 Enthusiasts", id: "2", username: "user2", content: "#kony2012" },
+    { community: "Figma Enthusiasts", id: "3", username: "keenan", content: "erm what the figma" },
   ];
 
-  // this works and i dont know why
-  // big javascript is out to get me
+  const communities = ["All", ...new Set(posts.map(post => post.community))];
+
+  const filteredPosts = selectedCommunity === "All"
+    ? posts
+    : posts.filter(post => post.community === selectedCommunity);
+
   getHelloWorld().then((message) => {
     console.log(message);
   });
-  
-  /*const fetchHelloWorld = async () => {
-    try {
-      const response = await fetch(
-        "https://y5pyf47rw4.execute-api.us-east-2.amazonaws.com/dev/helloWorld"
-      );
-      const jsonResponse = await response.json();
-      setData(jsonResponse);
-      setLoading(false);
-    } catch (error) {
-      setError(error);
-      setLoading(false);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchHelloWorld();
-  }, []);
-  console.log(data);
-
-  if (loading) {
-    return (
-      <View style={StyleExample.container}>
-        <Text>Loading....</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={StyleExample.container}>
-        <Text>Error: {error.message}</Text>
-      </View>
-    );
-  }*/
 
   return (
-    <View>
-        <FlatList
-          data={posts}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <PostCard {...item} />}
-        />
-      </View>
+    <View style={styles.container}>
+      {/* Scrollable Filter Options */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterContainer}>
+        {communities.map((community) => (
+          <TouchableOpacity
+            key={community}
+            style={[styles.filterButton, selectedCommunity === community && styles.selectedButton]}
+            onPress={() => setSelectedCommunity(community)}
+          >
+            <Text style={styles.filterText}>{community}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      {/* Post List */}
+      <FlatList
+        data={filteredPosts}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <PostCard {...item} />}
+        contentContainerStyle={styles.postList}
+      />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#f8f8f8",
+  },
+  filterContainer: {
+    flexDirection: "row",
+    paddingVertical: 10 ,
+    paddingHorizontal: 5,
+  },
+  filterButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    backgroundColor: "#ddd",
+    marginHorizontal: 5,
+    flexShrink: 1,
+    alignSelf: "flex-start"
+  },
+  selectedButton: {
+    backgroundColor: "#007bff",
+  },
+  filterText: {
+    color: "#000",
+    lineHeight: 18,
+    fontSize: 14,
+  },
+  postList: {
+    flexGrow: 1,
+  },
+});

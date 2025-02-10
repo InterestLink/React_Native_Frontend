@@ -1,46 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-/*
-const PostCard = ({ username, content, image }) => {
-  return (
-    <View style={styles.postContainer}>
-      <Text style={styles.username}>{username}</Text>
-      <Text style={styles.content}>{content}</Text>
-      {image && <Image source={{ uri: image }} style={styles.image} />}
-    </View>
-  );
-};
 
-const styles = StyleSheet.create({
-  postContainer: {
-    padding: 10,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    marginVertical: 8,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  username: {
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  content: {
-    marginTop: 5,
-    fontSize: 14,
-  },
-  image: {
-    width: "100%",
-    height: 200,
-    marginTop: 10,
-    borderRadius: 8,
-  },
-});
-
-export default PostCard;*/
-
-const PostCard = ({ username, content, image }) => {
+const PostCard = ({ community, username, content, image }) => {
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -64,7 +25,13 @@ const PostCard = ({ username, content, image }) => {
 
   return (
     <View style={styles.postContainer}>
+      {/* Community Name */}
+      <Text style={styles.community}>{community}</Text>
+
+      {/* Username */}
       <Text style={styles.username}>{username}</Text>
+
+      {/* Post Content */}
       <Text style={styles.content}>{content}</Text>
       {image && <Image source={{ uri: image }} style={styles.image} />}
 
@@ -107,6 +74,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+  },
+  community: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#555",
+    marginBottom: 2,
   },
   username: {
     fontWeight: "bold",
