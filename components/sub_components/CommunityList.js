@@ -1,28 +1,24 @@
+// CommunityList.js
 import * as React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet  } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 // Sub Components
-import CommunityCard from "./CommunityCard.js"
+import CommunityCard from "./CommunityCard.js";
 
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
-
   },
   content: {
-    padding: 10,
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     flexGrow: 1,
   },
-  cardWrapper: {
-    width: 150, 
-    height: 120, 
-    marginBottom: 10,
-  },
 });
 
-export default function Communities({ navigation }) {
+export default function Communities() {
+  const navigation = useNavigation();
   const communities = [
     { id: 1, name: 'Gaming Hub', icon: 'https://picsum.photos/500/500?random=1' },
     { id: 2, name: 'React Native Devs', icon: 'https://picsum.photos/200/300?random=2' },
@@ -51,7 +47,7 @@ export default function Communities({ navigation }) {
             key={community.id} 
             name={community.name} 
             icon={community.icon}
-            onPress={() => navigation.navigate('CommunityPage', { community })} 
+            onPress={() => navigation.navigate('CommunityPage', { community })}
           />
         ))}
       </ScrollView>

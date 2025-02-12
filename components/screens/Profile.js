@@ -53,7 +53,7 @@ const Profile = ({ navigation }) => {
       case 'Posts':
         return <ProfilePosts />;
       case 'Communities':
-        return <CommunityList />;
+        return <CommunityList navigation={navigation} />
       case 'Followers':
         return <Text>Here is the list of followers...</Text>;
       case 'Following':

@@ -19,15 +19,20 @@ const CommunityCard = ({ name, icon, onPress }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    width: 300,
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
-    borderRadius: 16,
-    padding: 12,
+    backgroundColor: '#fff', 
+    borderRadius: 16, 
+    paddingHorizontal: 12, 
+    paddingVertical: 8, 
     marginVertical: 5,
-    borderWidth: 2,
-    borderColor: '#ddd',
+    width: '100%',
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 16, 
+    elevation: 2
+    
   },
+  
   iconWrapper: {
     width: 50,
     height: 50,

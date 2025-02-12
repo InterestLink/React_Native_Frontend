@@ -8,9 +8,9 @@ export default function Home({ navigation }) {
   const [selectedCommunity, setSelectedCommunity] = useState("All");
 
   const posts = [
-    { community: "TestCommunity", id: "1", username: "chief keef", content: "All these damn frenemies, I'm gon' call up PooPoo Man" },
+    { community: "RapEnjoyers", id: "1", username: "ChiefKeefFan202", content: "Wake up, gotta thank the day, yeah, I’m blessed now" },
     { community: "Kony2012 Enthusiasts", id: "2", username: "user2", content: "#kony2012" },
-    { community: "Figma Enthusiasts", id: "3", username: "keenan", content: "erm what the figma" },
+    { community: "Figma Enthusiasts", id: "3", username: "keenan", content: "I love figma!" },
   ];
 
   const communities = ["All", ...new Set(posts.map(post => post.community))];
