@@ -11,6 +11,7 @@ import CommunityPage from "./screens/CommunityPage";
 import Home from "./screens/Home";
 import Search from "./screens/Search";
 import Profile from "./screens/Profile";
+import EditProfile from "./screens/EditProfile";
 
 import MainHeader from "./sub_components/MainHeader";
 
@@ -74,7 +75,14 @@ function ProfileStack() {
       <Stack.Screen 
         name="ProfileScreen" 
         component={Profile} 
-        options={{ headerShown: false }} 
+        options={{
+          header: () => <MainHeader />,
+        }}
+      />
+      <Stack.Screen 
+        name="EditProfile" 
+        component={EditProfile}
+        options={{ title: "Edit Profile" }}
       />
     </Stack.Navigator>
   );
