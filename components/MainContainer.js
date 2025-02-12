@@ -136,7 +136,7 @@ export default function MainContainer() {
         <RootStack.Screen 
           name="CommunityPage" 
           component={CommunityPage}
-          options={{ title: 'Community' }} 
+          options={({ route }) => ({ title: route.params?.community?.name || 'Community' })} 
         />
       </RootStack.Navigator>
     </NavigationContainer>
