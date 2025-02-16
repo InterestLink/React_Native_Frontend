@@ -38,8 +38,6 @@ export default function Communities() {
     <View style={styles.pageContainer}>
       <ScrollView
         contentContainerStyle={styles.content}
-        bounces={false}
-        overScrollMode="never"
         showsVerticalScrollIndicator={false}
       >
         {communities.map((community) => (
