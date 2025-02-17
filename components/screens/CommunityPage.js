@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   tabContent: {
     flex: 1,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#fff',
   },
   tabText: {
     fontSize: 16,
