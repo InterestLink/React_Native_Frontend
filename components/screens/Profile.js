@@ -1,17 +1,28 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ScrollView, Modal, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CommunityList from '../sub_components/CommunityList';
-import ProfilePosts from '../sub_components/ProfilePosts'; 
+import ProfilePosts from '../sub_components/ProfilePosts';
 
 const Profile = ({ navigation }) => {
   // Dummy data
   const displayName = "First Last";
   const username = "Username";
-  const userBio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis vel tellus in maximus. Nam pulvinar nulla non finibus aliquam.";
-  
-  // State to manage the selected view
+  const userBio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis vel tellus in maximus. Nam pulvinar nulla non finibus aliquam. Curabitur sed libero id augue varius tincidunt. Vivamus ut sapien ut enim interdum scelerisque. Nulla ac dictum lectus, vitae tincidunt purus. Nulla facilisi. Phasellus cursus, ipsum eget sollicitudin iaculis, ex enim sodales turpis, vitae feugiat elit nulla eu sapien. Integer vel nulla sem. Duis condimentum lorem erat, at eleifend elit malesuada non.";
+
+  // Number of Communities, Followers, and Following
+  const numCommunities = 10;
+  const numFollowers = 120;
+  const numFollowing = 80;
+
+  // State to manage the selected view and modal visibility
   const [selectedView, setSelectedView] = useState('Posts');
+  const [isFollowersModalVisible, setFollowersModalVisible] = useState(false);
+  const [isFollowingModalVisible, setFollowingModalVisible] = useState(false);
+  const [isCommunitiesModalVisible, setCommunitiesModalVisible] = useState(false);
+
+  // State to manage the expanded bio
+  const [isBioExpanded, setIsBioExpanded] = useState(false);
 
   // Handle share icon click
   const handleShare = () => {
@@ -20,28 +31,28 @@ const Profile = ({ navigation }) => {
       "Choose an option:",
       [
         {
-        text: "Copy Username",
-        onPress: () => {
-          // Placeholder for copy to clipboard functionality
-          Alert.alert("Copied", "Username copied to clipboard.");
+          text: "Copy Username",
+          onPress: () => {
+            // Placeholder for copy to clipboard functionality
+            Alert.alert("Copied", "Username copied to clipboard.");
+          },
         },
-      },
-      {
-        text: "Share",
-        onPress: () => {
-          // Placeholder for sharing via social media apps or messaging
-          Alert.alert("Share", "Sharing via social media or messaging...");
+        {
+          text: "Share",
+          onPress: () => {
+            // Placeholder for sharing via social media apps or messaging
+            Alert.alert("Share", "Sharing via social media or messaging...");
+          },
         },
-      },
-      {
-        text: "Cancel",
-        style: "cancel",
-      },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
       ],
       { cancelable: true }
     );
   };
-  
+
   // Handle edit icon click
   const handleEdit = () => {
     navigation.navigate('EditProfile'); //Navigate to EditProfile screen
@@ -53,11 +64,15 @@ const Profile = ({ navigation }) => {
       case 'Posts':
         return <ProfilePosts />;
       case 'Communities':
-        return <CommunityList navigation={navigation} />
+        return <CommunityList navigation={navigation} />;
       case 'Followers':
         return <Text>Here is the list of followers...</Text>;
       case 'Following':
         return <Text>Here is the list of following...</Text>;
+      case 'Saved':
+        return <ProfilePosts />;
+      case 'Liked':
+        return <ProfilePosts />;
       default:
         return <Text>Here are the user's posts...</Text>;
     }
@@ -71,34 +86,66 @@ const Profile = ({ navigation }) => {
         <View style={styles.profileInfoContainer}>
           {/* Profile Image, Name, Username, and Icons */}
           <View style={styles.profileImageAndTextContainer}>  
-          <Image 
-            source={require('../../assets/images/default_pfp.jpg')} 
-            style={styles.profileImage} 
-          />
-          <View style={styles.textContainer}>
-            <View style={styles.nameAndEditContainer}>
-              <Text style={styles.nameText}>{displayName}</Text>
-              <TouchableOpacity onPress={handleEdit}>
-              <Image
-                source={require('../../assets/images/icons8-edit-24.png')}
-                style={styles.icon}
-              />
-              </TouchableOpacity>
+            <Image 
+              source={require('../../assets/images/default_pfp.jpg')} 
+              style={styles.profileImage} 
+            />
+            <View style={styles.textContainer}>
+              <View style={styles.nameAndEditContainer}>
+                <TouchableOpacity 
+                  style={styles.statItem} 
+                  onPress={() => setCommunitiesModalVisible(true)} // Open Communities Modal
+                >
+                  <Text style={styles.statText}>Communities</Text>
+                  <Text style={styles.statCount}>{numCommunities}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity 
+                  style={styles.statItem} 
+                  onPress={() => setFollowersModalVisible(true)} // Open Followers Modal
+                >
+                  <Text style={styles.statText}>Followers</Text>
+                  <Text style={styles.statCount}>{numFollowers}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity 
+                  style={styles.statItem} 
+                  onPress={() => setFollowingModalVisible(true)} // Open Following Modal
+                >
+                  <Text style={styles.statText}>Following</Text>
+                  <Text style={styles.statCount}>{numFollowing}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.usernameAndShareContainer}>
-              <Text style={styles.usernameText}>@{username}</Text>
-              <TouchableOpacity onPress={handleShare}>
-              <Image
-                source={require('../../assets/images/icons8-share-24.png')}
-                style={styles.icon}
-              />
-              </TouchableOpacity>
-              </View>
-              </View>
+          </View>
         </View>
         {/* Bio */}
-        <Text style={styles.bioText}>{userBio}</Text>
+        <View style={styles.usernameAndShareContainer}>
+          <Text style={styles.nameText}>{displayName}</Text>
+          <TouchableOpacity onPress={handleEdit}>
+            <Image
+              source={require('../../assets/images/icons8-edit-24.png')}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
         </View>
+        <View style={styles.usernameAndShareContainer}>
+          <Text style={styles.usernameText}>@{username}</Text>
+          <TouchableOpacity onPress={handleShare}>
+            <Image
+              source={require('../../assets/images/icons8-share-24.png')}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.bioText} numberOfLines={isBioExpanded ? undefined : 1}>
+          {userBio}
+        </Text>
+
+        <TouchableOpacity onPress={() => setIsBioExpanded(!isBioExpanded)} style={styles.expandTextContainer}>
+          <Text style={styles.expandText}>{isBioExpanded ? 'Show Less' : 'Show More'}</Text>
+        </TouchableOpacity>
 
         {/* Stats Section with Buttons */}
         <View style={styles.statsContainer}>
@@ -111,23 +158,16 @@ const Profile = ({ navigation }) => {
 
           <TouchableOpacity 
             style={styles.statItem} 
-            onPress={() => setSelectedView('Communities')}
+            onPress={() => setSelectedView('Saved')}
           >
-            <Text style={styles.statText}>Communities</Text>
+            <Text style={styles.statText}>Saved</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
             style={styles.statItem} 
-            onPress={() => setSelectedView('Followers')}
+            onPress={() => setSelectedView('Liked')}
           >
-            <Text style={styles.statText}>Followers</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.statItem} 
-            onPress={() => setSelectedView('Following')}
-          >
-            <Text style={styles.statText}>Following</Text>
+            <Text style={styles.statText}>Liked</Text>
           </TouchableOpacity>
         </View>
 
@@ -139,10 +179,69 @@ const Profile = ({ navigation }) => {
           {renderContent()}
         </View>
       </View>
+
+      {/* Followers Modal */}
+      <Modal
+        visible={isFollowersModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setFollowersModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Followers</Text>
+            <ScrollView>
+              <Text>Follower 1</Text>
+              <Text>Follower 2</Text>
+              <Text>Follower 3</Text>
+            </ScrollView>
+            <Button title="Close" onPress={() => setFollowersModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+
+      {/* Following Modal */}
+      <Modal
+        visible={isFollowingModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setFollowingModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Following</Text>
+            <ScrollView>
+              <Text>Following 1</Text>
+              <Text>Following 2</Text>
+              <Text>Following 3</Text>
+            </ScrollView>
+            <Button title="Close" onPress={() => setFollowingModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+
+      {/* Communities Modal */}
+      <Modal
+        visible={isCommunitiesModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setCommunitiesModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Communities</Text>
+            <ScrollView>
+              <Text>Community 1</Text>
+              <Text>Community 2</Text>
+              <Text>Community 3</Text>
+            </ScrollView>
+            <Button title="Close" onPress={() => setCommunitiesModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -211,19 +310,49 @@ const styles = StyleSheet.create({
     marginHorizontal: 8, // Optional: adjust as needed
   },
   statText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  statCount: {
     fontSize: 14,
-    color: '#333',
+    color: '#888',
   },
   separator: {
+    height: 1,
+    backgroundColor: '#ddd',
+    width: '80%',
     alignSelf: 'center',
-    width: '80%', // Only takes up 80% of the container width
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    marginTop: 16,
+    marginVertical: 16,
   },
   contentArea: {
-    flex: 1, // This will make the content take up the available space from separator to bottom
+    flex: 1,
     marginTop: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  expandTextContainer: {
+    marginTop: 8,
+    alignItems: 'center',
+  },
+  expandText: {
+    color: '#007bff',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
 
