@@ -10,9 +10,10 @@ import Communities from "./screens/Communities";
 import CommunityPage from "./screens/CommunityPage";
 import Home from "./screens/Home";
 import Search from "./screens/Search";
-import Profile from "./screens/Profile";
+import Profile from "./screens/Profile"; // Used in the Profile tab and for viewing other profiles
 import EditProfile from "./screens/EditProfile";
 
+// Sub Components
 import MainHeader from "./sub_components/MainHeader";
 
 const communityName = "Communities";
@@ -53,7 +54,7 @@ function SearchStack() {
   );
 }
 
-// Communities Stack (without CommunityPage)
+// Communities Stack (for listing communities)
 function CommunitiesStack() {
   return (
     <Stack.Navigator>
@@ -68,7 +69,7 @@ function CommunitiesStack() {
   );
 }
 
-// Profile Stack
+// Profile Stack (for logged-in user profile & edit)
 function ProfileStack() {
   return (
     <Stack.Navigator>
@@ -122,21 +123,29 @@ function MainTabs() {
   );
 }
 
-// Root stack wraps the Tabs and the CommunityPage screen
+// Root stack wraps the Tabs and extra screens accessible from anywhere
 const RootStack = createStackNavigator();
 export default function MainContainer() {
   return (
     <NavigationContainer>
       <RootStack.Navigator>
+        {/* Main Tabs */}
         <RootStack.Screen 
           name="MainTabs" 
           component={MainTabs} 
           options={{ headerShown: false }} 
         />
+        {/* Community details screen */}
         <RootStack.Screen 
           name="CommunityPage" 
           component={CommunityPage}
           options={({ route }) => ({ title: route.params?.community?.name || 'Community' })} 
+        />
+        {/* Generic User Profile screen (for viewing any user's profile) */}
+        <RootStack.Screen 
+          name="UserProfile" 
+          component={Profile}
+          options={({ route }) => ({ title: route.params?.profile?.name || 'Profile' })} 
         />
       </RootStack.Navigator>
     </NavigationContainer>

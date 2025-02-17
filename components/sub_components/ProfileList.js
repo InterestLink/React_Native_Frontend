@@ -32,7 +32,7 @@ export default function ProfileList() {
     { id: 10, name: 'Sophia White', bio: 'AI researcher working on neural networks.', icon: 'https://picsum.photos/200/300?random=10', otherData: {} },
     { id: 11, name: 'Daniel Harris', bio: 'Startup founder focusing on sustainable tech.', icon: 'https://picsum.photos/200/300?random=11', otherData: {} },
     { id: 12, name: 'Olivia Thompson', bio: 'Outdoor adventurer and travel blogger.', icon: 'https://picsum.photos/200/300?random=12', otherData: {} }
-];
+  ];
 
   return (
     <View style={styles.pageContainer}>
@@ -45,7 +45,7 @@ export default function ProfileList() {
             key={profile.id} 
             name={profile.name} 
             icon={profile.icon}
-            onPress={() => navigation.navigate('ProfilePage', { profile })}
+            onPress={() => navigation.navigate('UserProfile', { profile })}
           />
         ))}
       </ScrollView>

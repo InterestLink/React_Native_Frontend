@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import ProfileList from '../sub_components/ProfileList';
 
 
 // dummy screens for posts and members
@@ -12,7 +13,7 @@ const PostsScreen = () => (
 
 const MembersScreen = () => (
   <View style={styles.tabContent}>
-    <Text style={styles.tabText}>Members will be listed here.</Text>
+    <ProfileList />
   </View>
 );
 
@@ -73,8 +74,6 @@ const styles = StyleSheet.create({
   },
   tabContent: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#f8f8f8',
   },
   tabText: {
