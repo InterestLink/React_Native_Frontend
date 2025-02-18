@@ -11,7 +11,8 @@ import CommunityPage from "./screens/CommunityPage";
 import Home from "./screens/Home";
 import Search from "./screens/Search";
 import Profile from "./screens/Profile"; // Used in the Profile tab and for viewing other profiles
-import EditProfile from "./screens/EditProfile";
+import EditProfile from "./screens/EditProfile"; // Used for editing the logged-in user's profile
+import Settings from "./screens/Settings"; // Used for app settings
 
 // Sub Components
 import MainHeader from "./sub_components/MainHeader";
@@ -84,6 +85,11 @@ function ProfileStack() {
         name="EditProfile" 
         component={EditProfile}
         options={{ title: "Edit Profile" }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={Settings}
+        options={{ title: "Settings" }}
       />
     </Stack.Navigator>
   );

@@ -58,6 +58,11 @@ const Profile = ({ navigation }) => {
     navigation.navigate('EditProfile'); //Navigate to EditProfile screen
   };
 
+  // Handle settings icon click
+  const handleSettings = () => {
+    navigation.navigate('Settings'); //Navigate to Settings screen
+  };
+
   // Content for each view
   const renderContent = () => {
     switch (selectedView) {
@@ -80,6 +85,13 @@ const Profile = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Settings icon in the top right corner */}
+      <TouchableOpacity onPress={handleSettings} style={styles.settingsIconContainer}>
+        <Image
+          source={require('../../assets/images/settings.png')}
+          style={styles.settingsIcon}
+        />
+      </TouchableOpacity>
       {/* Main Content */}
       <View style={styles.contentContainer}>
         {/* Profile Information */}
@@ -353,6 +365,16 @@ const styles = StyleSheet.create({
     color: '#007bff',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  settingsIconContainer: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    zIndex: 1,
+  },
+  settingsIcon: {
+    width: 24,
+    height: 24,
   },
 });
 
