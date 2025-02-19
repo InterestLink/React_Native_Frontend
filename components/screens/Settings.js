@@ -25,11 +25,8 @@ const Settings = () => {
       case 'Content':
         navigation.navigate('ContentSettings');
         break;
-      case 'Appearance':
-        navigation.navigate('AppearanceSettings');
-        break;
-      case 'AccessibilityAndLanguage':
-        navigation.navigate('AccessibilityAndLanguage');
+      case 'Accessibility':
+        navigation.navigate('Accessibility');
         break;
       case 'Help':
         navigation.navigate('Help');
@@ -70,12 +67,8 @@ const Settings = () => {
           <Text style={styles.optionText}>Content</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('Appearance')}>
-          <Text style={styles.optionText}>Appearance</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('AccessibilityAndLanguage')}>
-          <Text style={styles.optionText}>Accessibility and Language</Text>
+        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('Accessibility')}>
+          <Text style={styles.optionText}>Accessibility</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('Help')}>
