@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 
-const AccessibilityLanguageSettings = () => {
+const Accessibility = () => {
   const [isVoiceOverEnabled, setIsVoiceOverEnabled] = useState(false);
   const [isHighContrast, setIsHighContrast] = useState(false);
   const [textSize, setTextSize] = useState('Medium');
@@ -12,7 +12,7 @@ const AccessibilityLanguageSettings = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Accessibility & Language</Text>
+      <Text style={styles.title}>Accessibility</Text>
 
       {/* VoiceOver / TalkBack Toggle */}
       <View style={styles.settingRow}>
@@ -106,4 +106,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AccessibilityLanguageSettings;
+export default Accessibility;
