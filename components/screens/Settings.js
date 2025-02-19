@@ -9,6 +9,41 @@ const Settings = () => {
   const handleOptionPress = (option) => {
     console.log(`${option} pressed`);
     // Add navigation or functionality here later
+    switch (option) {
+      case 'Account':
+        navigation.navigate('AccountSettings');
+        break;
+      case 'Privacy and Security':
+        navigation.navigate('PrivacyAndSecurity');
+        break;
+      case 'Notifications':
+        navigation.navigate('Notifications');
+        break;
+      case 'Moderation':
+        navigation.navigate('Moderation');
+        break;
+      case 'Content':
+        navigation.navigate('ContentSettings');
+        break;
+      case 'Appearance':
+        navigation.navigate('AppearanceSettings');
+        break;
+      case 'AccessibilityAndLanguage':
+        navigation.navigate('AccessibilityAndLanguage');
+        break;
+      case 'Help':
+        navigation.navigate('Help');
+        break;
+      case 'About':
+        navigation.navigate('About');
+        break;
+      case 'Sign Out':
+        // Handle sign out logic here
+        console.log('Sign Out pressed');
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -39,7 +74,7 @@ const Settings = () => {
           <Text style={styles.optionText}>Appearance</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('Accessibility and Language')}>
+        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('AccessibilityAndLanguage')}>
           <Text style={styles.optionText}>Accessibility and Language</Text>
         </TouchableOpacity>
 
