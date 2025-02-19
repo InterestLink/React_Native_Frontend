@@ -13,6 +13,7 @@ import Search from "./screens/Search";
 import Profile from "./screens/Profile"; // Used in the Profile tab and for viewing other profiles
 import EditProfile from "./screens/EditProfile"; // Used for editing the logged-in user's profile
 import Settings from "./screens/Settings"; // Used for app settings
+import AccessibilityAndLanguage from "./screens/AccessibilityAndLanguage"; // Placeholder for accessibility and language settings
 
 // Sub Components
 import MainHeader from "./sub_components/MainHeader";
@@ -91,6 +92,12 @@ function ProfileStack() {
         component={Settings}
         options={{ title: "Settings" }}
       />
+      <Stack.Screen
+        name="AccessibilityAndLanguage" 
+        component={AccessibilityAndLanguage}
+        options={{ title: "Accessibility & Language" }}
+      />
+
     </Stack.Navigator>
   );
 }
