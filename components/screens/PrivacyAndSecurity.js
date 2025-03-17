@@ -6,7 +6,6 @@ const PrivacyAndSecurity = () => {
   const [personalizedFeed, setPersonalizedFeed] = useState(true);
   const [adPreferences, setAdPreferences] = useState(true);
   const [twoFactorAuth, setTwoFactorAuth] = useState(false);
-  const [emailNotifications, setEmailNotifications] = useState(true);
 
   return (
     <SafeAreaView style={styles.container}>
