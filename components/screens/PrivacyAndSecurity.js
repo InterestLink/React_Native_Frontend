@@ -41,11 +41,6 @@ const PrivacyAndSecurity = () => {
           <Switch value={twoFactorAuth} onValueChange={setTwoFactorAuth} />
         </View>
 
-        <Text style={styles.sectionHeader}>Notifications</Text>
-        <View style={styles.settingItem}>
-          <Text style={styles.settingText}>Email Notifications</Text>
-          <Switch value={emailNotifications} onValueChange={setEmailNotifications} />
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
