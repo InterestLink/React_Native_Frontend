@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { 
+  View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Share 
+} from "react-native";
 
-const PostCard = ({ community, username, content, image }) => {
+const PostCard = ({ community, username, content, image, tags }) => {
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -15,8 +17,14 @@ const PostCard = ({ community, username, content, image }) => {
     setSaved(!saved);
   };
 
-  const handleShare = () => {
-    console.log("Share functionality to be implemented");
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `Check out this post from ${username} in ${community}: "${content}"`,
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
   };
 
   const handleComment = () => {
@@ -34,6 +42,17 @@ const PostCard = ({ community, username, content, image }) => {
       {/* Post Content */}
       <Text style={styles.content}>{content}</Text>
       {image && <Image source={{ uri: image }} style={styles.image} />}
+
+      {/* Tags */}
+      {tags && tags.length > 0 && (
+        <FlatList
+          data={tags}
+          horizontal
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => <Text style={styles.tag}>#{item}</Text>}
+          contentContainerStyle={styles.tagsContainer}
+        />
+      )}
 
       {/* Action Buttons */}
       <View style={styles.actions}>
@@ -94,6 +113,19 @@ const styles = StyleSheet.create({
     height: 200,
     marginTop: 10,
     borderRadius: 8,
+  },
+  tagsContainer: {
+    flexDirection: "row",
+    marginTop: 8,
+  },
+  tag: {
+    backgroundColor: "#eee",
+    color: "#333",
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    marginRight: 6,
+    fontSize: 12,
   },
   actions: {
     flexDirection: "row",

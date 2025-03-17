@@ -8,7 +8,7 @@ export default function Home({ navigation }) {
   const [selectedCommunity, setSelectedCommunity] = useState("All");
 
   const posts = [
-    { community: "RapEnjoyers", id: "1", username: "ChiefKeefFan202", content: "Wake up, gotta thank the day, yeah, I’m blessed now" },
+    { community: "RapEnjoyers", id: "1", username: "ChiefKeefFan202", content: "Wake up, gotta thank the day, yeah, I’m blessed now", tags:["tag1", "chiefkeef","music"]},
     { community: "Kony2012 Enthusiasts", id: "2", username: "user2", content: "#kony2012" },
     { community: "Figma Enthusiasts", id: "3", username: "keenan", content: "I love figma!" },
   ];
