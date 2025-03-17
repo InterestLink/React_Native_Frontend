@@ -14,6 +14,14 @@ import Profile from "./screens/Profile"; // Used in the Profile tab and for view
 import EditProfile from "./screens/EditProfile"; // Used for editing the logged-in user's profile
 import Settings from "./screens/Settings"; // Used for app settings
 import Accessibility from "./screens/Accessibility"; // Placeholder for accessibility and language settings
+import Help from "./screens/Help"; // Placeholder for help and support
+import Moderation from "./screens/Moderation"; // Placeholder for moderation settings
+import ContentSettings from "./screens/ContentSettings"; // Placeholder for content settings
+import About from "./screens/About"; // Placeholder for about section
+import ResetPassword from "./screens/ResetPassword"; // Placeholder for reset password screen
+import Account from "./screens/Account"; // Placeholder for account settings
+import PrivacyAndSecurity from "./screens/PrivacyAndSecurity"; // Placeholder for privacy and security settings
+import Notifications from "./screens/Notifications"; // Placeholder for notifications settings
 
 // Sub Components
 import MainHeader from "./sub_components/MainHeader";
@@ -93,9 +101,49 @@ function ProfileStack() {
         options={{ title: "Settings" }}
       />
       <Stack.Screen
+        name="AccountSettings"
+        component={Account}
+        options={{ title: "Account Settings" }}
+      />
+      <Stack.Screen
+        name="PrivacyAndSecurity" 
+        component={PrivacyAndSecurity}
+        options={{ title: "Privacy and Security" }}
+      />
+      <Stack.Screen
+        name="Notifications" 
+        component={Notifications}
+        options={{ title: "Notifications" }}
+      />
+      <Stack.Screen
         name="Accessibility" 
         component={Accessibility}
         options={{ title: "Accessibility" }}
+      />
+      <Stack.Screen
+        name="Help" 
+        component={Help}
+        options={{ title: "Help" }}
+      />
+      <Stack.Screen
+        name="Moderation" 
+        component={Moderation}
+        options={{ title: "Moderation" }}
+      />
+      <Stack.Screen
+        name="ResetPassword"
+        component={ResetPassword} 
+        options={{ title: "Reset Password" }}
+      />
+      <Stack.Screen
+        name="About" 
+        component={About}
+        options={{ title: "About InterestLink" }}
+      />
+      <Stack.Screen
+        name="ContentSettings" 
+        component={ContentSettings}
+        options={{ title: "Content Settings" }}
       />
 
     </Stack.Navigator>
