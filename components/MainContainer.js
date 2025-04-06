@@ -25,6 +25,8 @@ import Notifications from "./screens/Notifications"; // Placeholder for notifica
 
 // Sub Components
 import MainHeader from "./sub_components/MainHeader";
+import DirectMessages from "./screens/DirectMessages";
+import ChatScreen from "./screens/ChatScreen";
 
 const communityName = "Communities";
 const homeName = "Home";
@@ -207,6 +209,18 @@ export default function MainContainer() {
           name="UserProfile" 
           component={Profile}
           options={({ route }) => ({ title: route.params?.profile?.name || 'Profile' })} 
+        />
+        {/* Direct Message stack */}
+        <RootStack.Screen
+          name="DirectMessages"
+          component={DirectMessages}
+          options={({ route }) => ({ title: route.params?.profile?.name || 'Messages' })} 
+        />
+        {/* Chat Message stack */}
+        <RootStack.Screen
+          name="ChatScreen"
+          component={ChatScreen}
+          options={({ route }) => ({ title: route.params?.profile?.name || 'Chats' })} 
         />
       </RootStack.Navigator>
     </NavigationContainer>

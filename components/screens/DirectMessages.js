@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, Image } from 'react-native';
 
 const conversations = [
-  { id: '1', name: 'John Doe', message: 'Hey, how are you?' },
-  { id: '2', name: 'Jane Smith', message: 'Let’s catch up soon!' },
-  { id: '3', name: 'Sam Green', message: 'Did you finish the project?' },
+  { id: '1', name: 'John Doe', recentMessage: 'Hey, how are you?', icon: 'https://picsum.photos/500/500?random=1' },
+  { id: '2', name: 'Jane Smith', recentMessage: 'Let’s catch up soon!', icon: 'https://picsum.photos/500/500?random=2' },
+  { id: '3', name: 'Sam Green', recentMessage: 'Did you finish the project?', icon: 'https://picsum.photos/500/500?random=3' },
 ];
 
 export default function DirectMessages({ navigation }) {
@@ -12,10 +12,15 @@ export default function DirectMessages({ navigation }) {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.conversation}
-      onPress={() => navigation.navigate('ChatScreen', { conversationId: item.id })}
+      onPress={() => navigation.navigate('ChatScreen', { conversationName: item.name})}
     >
-      <Text style={styles.name}>{item.name}</Text>
-      <Text style={styles.message}>{item.message}</Text>
+      <View style={styles.iconContainer}>
+        <Image source={{ uri: item.icon }} style={styles.icon} />
+        <View style={styles.textContainer}>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.recentMessage}>{item.recentMessage}</Text>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 
@@ -47,11 +52,24 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#ddd',
   },
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  icon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 16,
+  },
+  textContainer: {
+    flex: 1,
+  },
   name: {
     fontSize: 18,
     fontWeight: 'bold',
   },
-  message: {
+  recentMessage: {
     fontSize: 14,
     color: '#555',
   },
