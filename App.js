@@ -4,16 +4,16 @@ import DefaultHome from './components/screens/DefaultHome';
 import Login from './components/screens/Login';
 
 function App() {
-  // Testing vars for routing, we can use auth later when backend is ready
-  const isFirstTimeUser = false;
-  const isLoggedIn = true;
+  // Changed these defaults to false
+  const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Now defaults to false
 
   if (isFirstTimeUser) {
     return <DefaultHome />;
   }
 
   return (
-    isLoggedIn ? <MainContainer /> : <Login/>
+    isLoggedIn ? <MainContainer /> : <Login onLogin={() => setIsLoggedIn(true)}/>
   );
 }
 
