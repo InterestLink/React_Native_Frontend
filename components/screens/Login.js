@@ -14,7 +14,7 @@ export default function Login({ navigation, onLogin }) {
 
     const handleGuestLogin = () => {
         console.log('Continuing as guest');
-        onLogin(); // Bypass auth
+        onLogin(); // Bypass auth for now, replace with guest login logic if needed or delete this
     };
 
     return (
