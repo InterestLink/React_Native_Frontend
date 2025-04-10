@@ -1,8 +1,16 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { auth } from '../../firebase/firebase';
-import { signOut } from 'firebase/auth';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+  Alert,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { auth } from "../../services/firebase/firebase";
+import { signOut } from "firebase/auth";
 
 const Settings = () => {
   const navigation = useNavigation();
@@ -10,12 +18,12 @@ const Settings = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      console.log('User signed out successfully');
+      console.log("User signed out successfully");
       // Rest navigation stack and go to login screen
-      navigation.navigate('Login');
+      navigation.navigate("Login");
     } catch (error) {
-      console.error('Error signing out:', error);
-      Alert.alert('Sign Out Failed', error.message);
+      console.error("Error signing out:", error);
+      Alert.alert("Sign Out Failed", error.message);
     }
   };
 
@@ -23,39 +31,35 @@ const Settings = () => {
     console.log(`${option} pressed`);
     // Add navigation or functionality here later
     switch (option) {
-      case 'Account':
-        navigation.navigate('AccountSettings');
+      case "Account":
+        navigation.navigate("AccountSettings");
         break;
-      case 'Privacy and Security':
-        navigation.navigate('PrivacyAndSecurity');
+      case "Privacy and Security":
+        navigation.navigate("PrivacyAndSecurity");
         break;
-      case 'Notifications':
-        navigation.navigate('Notifications');
+      case "Notifications":
+        navigation.navigate("Notifications");
         break;
-      case 'Moderation':
-        navigation.navigate('Moderation');
+      case "Moderation":
+        navigation.navigate("Moderation");
         break;
-      case 'Content':
-        navigation.navigate('ContentSettings');
+      case "Content":
+        navigation.navigate("ContentSettings");
         break;
-      case 'Accessibility':
-        navigation.navigate('Accessibility');
+      case "Accessibility":
+        navigation.navigate("Accessibility");
         break;
-      case 'Help':
-        navigation.navigate('Help');
+      case "Help":
+        navigation.navigate("Help");
         break;
-      case 'About':
-        navigation.navigate('About');
+      case "About":
+        navigation.navigate("About");
         break;
-      case 'Sign Out':
-        Alert.alert(
-          'Sign Out',
-          'Are you sure you want to sign out?',
-          [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Sign Out', onPress: handleSignOut },
-          ],
-        );
+      case "Sign Out":
+        Alert.alert("Sign Out", "Are you sure you want to sign out?", [
+          { text: "Cancel", style: "cancel" },
+          { text: "Sign Out", onPress: handleSignOut },
+        ]);
         break;
       default:
         break;
@@ -66,41 +70,68 @@ const Settings = () => {
     <SafeAreaView style={styles.container}>
       {/* Scrollable List of Options */}
       <ScrollView style={styles.optionsContainer}>
-        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('Account')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => handleOptionPress("Account")}
+        >
           <Text style={styles.optionText}>Account</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('Privacy and Security')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => handleOptionPress("Privacy and Security")}
+        >
           <Text style={styles.optionText}>Privacy and Security</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('Notifications')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => handleOptionPress("Notifications")}
+        >
           <Text style={styles.optionText}>Notifications</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('Moderation')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => handleOptionPress("Moderation")}
+        >
           <Text style={styles.optionText}>Moderation</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('Content')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => handleOptionPress("Content")}
+        >
           <Text style={styles.optionText}>Content</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('Accessibility')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => handleOptionPress("Accessibility")}
+        >
           <Text style={styles.optionText}>Accessibility</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('Help')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => handleOptionPress("Help")}
+        >
           <Text style={styles.optionText}>Help</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('About')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => handleOptionPress("About")}
+        >
           <Text style={styles.optionText}>About</Text>
         </TouchableOpacity>
       </ScrollView>
 
       {/* Sign Out Button */}
-      <TouchableOpacity style={styles.signOutButton} onPress={() => handleOptionPress('Sign Out')}>
+      <TouchableOpacity
+        style={styles.signOutButton}
+        onPress={() => handleOptionPress("Sign Out")}
+      >
         <Text style={styles.signOutText}>Sign Out</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -110,7 +141,7 @@ const Settings = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   optionsContainer: {
     flex: 1,
@@ -119,22 +150,22 @@ const styles = StyleSheet.create({
   option: {
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: "#ddd",
   },
   optionText: {
     fontSize: 16,
   },
   signOutButton: {
     padding: 16,
-    alignItems: 'center',
+    alignItems: "center",
     borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    backgroundColor: '#f8f8f8',
+    borderTopColor: "#ddd",
+    backgroundColor: "#f8f8f8",
   },
   signOutText: {
     fontSize: 16,
-    color: 'red',
-    fontWeight: 'bold',
+    color: "red",
+    fontWeight: "bold",
   },
 });
 
