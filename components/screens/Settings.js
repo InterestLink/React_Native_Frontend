@@ -1,11 +1,24 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { auth } from '../../firebase/firebase';
+import { signOut } from 'firebase/auth';
 
 const Settings = () => {
   const navigation = useNavigation();
 
-  // Placeholder functions for clickable options
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      console.log('User signed out successfully');
+      // Rest navigation stack and go to login screen
+      navigation.navigate('Login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      Alert.alert('Sign Out Failed', error.message);
+    }
+  };
+
   const handleOptionPress = (option) => {
     console.log(`${option} pressed`);
     // Add navigation or functionality here later
@@ -35,8 +48,14 @@ const Settings = () => {
         navigation.navigate('About');
         break;
       case 'Sign Out':
-        // Handle sign out logic here
-        console.log('Sign Out pressed');
+        Alert.alert(
+          'Sign Out',
+          'Are you sure you want to sign out?',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Sign Out', onPress: handleSignOut },
+          ],
+        );
         break;
       default:
         break;

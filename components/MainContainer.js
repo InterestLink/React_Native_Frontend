@@ -15,6 +15,7 @@ import EditProfile from "./screens/EditProfile"; // Used for editing the logged-
 import Settings from "./screens/Settings"; // Used for app settings
 import Accessibility from "./screens/Accessibility"; // Placeholder for accessibility and language settings
 import Help from "./screens/Help"; // Placeholder for help and support
+import Login from "./screens/Login"; 
 import Moderation from "./screens/Moderation"; // Placeholder for moderation settings
 import ContentSettings from "./screens/ContentSettings"; // Placeholder for content settings
 import About from "./screens/About"; // Placeholder for about section
@@ -222,6 +223,15 @@ export default function MainContainer() {
           component={ChatScreen}
           options={({ route }) => ({ title: route.params?.profile?.name || 'Chats' })} 
         />
+        {/* Login screen */}
+        <RootStack.Screen name="Login" options={{ headerShown: false }}>
+          {({ navigation }) => (
+            <Login 
+            navigation={navigation} 
+            onLogin={() => navigation.navigate('MainTabs')}
+            />
+            )}
+            </RootStack.Screen>
       </RootStack.Navigator>
     </NavigationContainer>
   );

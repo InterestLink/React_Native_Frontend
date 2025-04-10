@@ -1,26 +1,49 @@
 import * as React from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useState } from 'react';
+import { auth } from '../../firebase/firebase'; // Importing auth from firebase
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { useFonts } from 'expo-font'; // Importing useFonts from expo-font
 
 export default function Login({ navigation, onLogin }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isSignup, setIsSignup] = useState(false); // Toggle between modes
+    const [isLoading, setIsLoading] = useState(false); // Loading state
 
-    const handleAuth = () => {
-        if (isSignup) {
-            // Signup validation
-            if (password !== confirmPassword) {
-                Alert.alert("Error", "Passwords don't match!");
-                return;
-            }
-            console.log('Signup attempted with:', email, password);
-        } else {
-            // Login validation
-            console.log('Login attempted with:', email, password);
+    const handleAuth = async () => {
+        if (!email || !password) {
+            Alert.alert("Error", "Please fill in all fields!");
+            return;
         }
-        onLogin(); // Temporary bypass
+
+        if (isSignup && password !== confirmPassword) {
+            Alert.alert("Error", "Passwords don't match!");
+            return;
+        }
+
+        setIsLoading(true); // Start loading
+        try {
+            if (isSignup) {
+                // Signup
+                await createUserWithEmailAndPassword(auth, email, password);
+                Alert.alert("Success", "Account created successfully!");
+            }
+            else {
+                // Login
+                await signInWithEmailAndPassword(auth, email, password);
+                Alert.alert("Success", "Logged in successfully!");
+            }
+            onLogin(); // Call the login function passed as prop
+        }
+        catch (error) {
+            console.error("Auth error:", error);
+            Alert.alert("Authentication Error", error.message);
+        }
+        finally {
+            setIsLoading(false); // Stop loading
+        }
     };
 
     const handleGuestLogin = () => {
@@ -28,9 +51,17 @@ export default function Login({ navigation, onLogin }) {
         onLogin();
     };
 
+    const [fontsLoaded] = useFonts({
+        'le-murmure': require('../../assets/fonts/le-murmure.ttf'),
+    });
+
+    if (!fontsLoaded) {
+        return null; // or a loading spinner
+    }
+
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>{isSignup ? 'Create Account' : 'Login'}</Text>
+            <Text style={styles.brand}>InterestLink</Text>
             
             {/* Email Field */}
             <TextInput
@@ -64,8 +95,9 @@ export default function Login({ navigation, onLogin }) {
             
             {/* Auth Button */}
             <Button 
-                title={isSignup ? 'Sign Up' : 'Login'} 
+                title={isLoading ? "Processing..." : (isSignup ? 'Sign Up' : 'Login')}
                 onPress={handleAuth} 
+                disabled={isLoading} // Disable button while loading
             />
             
             {/* Toggle Link */}
@@ -90,6 +122,13 @@ export default function Login({ navigation, onLogin }) {
 }
 
 const styles = StyleSheet.create({
+    brand: {
+        fontFamily: 'le-murmure',
+        fontSize: 50,
+        textAlign: 'center',
+        marginBottom: 20,
+        color: '#000',
+    },
     container: {
         flex: 1,
         justifyContent: 'center',
