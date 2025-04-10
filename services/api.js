@@ -7,3 +7,10 @@ export const getHelloWorld = async () => {
     console.log(API_URL)
     return data.body;
 }
+
+export const getUser = async () => {
+    const response = await fetch(`${API_URL}getUser`);
+    const data = await response.json();
+    console.log(API_URL)
+    return data.body;
+}
