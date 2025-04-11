@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { 
-  View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Share 
+  View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Share,
+  TextInput, ActivityIndicator
 } from "react-native";
 
-const PostCard = ({ community, username, content, image, tags }) => {
+const PostCard = ({ id, username, content, image }) => {
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(false);
 
   const handleLike = () => {
     setLiked(!liked);
@@ -27,8 +33,52 @@ const PostCard = ({ community, username, content, image, tags }) => {
     }
   };
 
-  const handleComment = () => {
-    console.log("Navigate to comment section");
+  const toggleComments = async () => {
+    if (!showComments) {
+      // Fetch comments when opening the comment section
+      try {
+        setCommentLoading(true);
+        const response = getComments(id);
+        const data = await response.json();
+        setComments(data.comments || []);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      } finally {
+        setCommentLoading(false);
+      }
+    }
+    setShowComments(!showComments);
+  };
+
+  const handleAddComment = async () => {
+    // Add comment (Userid, username, content, postId)
+
+    {/*if (!newComment.trim()) return;
+    
+    try {
+      setLoading(true);
+      const response = await fetch('YOUR_API_GATEWAY_ENDPOINT/comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          postId,
+          content: newComment,
+          author: username // You might want to use the actual logged-in user here
+        }),
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        setComments([...comments, result.comment]);
+        setNewComment("");
+      }
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    } finally {
+      setLoading(false);
+    }*/}
   };
 
   return (
@@ -64,7 +114,7 @@ const PostCard = ({ community, username, content, image, tags }) => {
           <Text style={styles.likeCount}>{likes}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleComment} style={styles.actionButton}>
+        <TouchableOpacity onPress={toggleComments} style={styles.actionButton}>
           <Image source={require("../../assets/images/comment.png")} style={styles.icon} />
         </TouchableOpacity>
 
@@ -79,6 +129,51 @@ const PostCard = ({ community, username, content, image, tags }) => {
           />
         </TouchableOpacity>
       </View>
+
+      {/* Comment Section */}
+      {showComments && (
+        <View style={styles.commentSection}>
+          {commentLoading ? (
+            <ActivityIndicator size="small" color="#0000ff" />
+          ) : (
+            <>
+              <FlatList
+                data={comments}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <View style={styles.comment}>
+                    <Text style={styles.commentAuthor}>{item.author}:</Text>
+                    <Text style={styles.commentText}>{item.content}</Text>
+                  </View>
+                )}
+                ListEmptyComponent={
+                  <Text style={styles.noComments}>No comments yet</Text>
+                }
+              />
+              <View style={styles.commentInputContainer}>
+                <TextInput
+                  style={styles.commentInput}
+                  placeholder="Write a comment..."
+                  value={newComment}
+                  onChangeText={setNewComment}
+                  multiline
+                />
+                <TouchableOpacity 
+                  onPress={handleAddComment} 
+                  style={styles.commentButton}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text style={styles.commentButtonText}>Post</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+        </View>
+      )}
     </View>
   );
 };
@@ -144,6 +239,55 @@ const styles = StyleSheet.create({
   likeCount: {
     marginLeft: 5,
     fontSize: 14,
+  },
+  commentSection: {
+    marginTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+    paddingTop: 10,
+  },
+  comment: {
+    flexDirection: "row",
+    marginBottom: 8,
+    padding: 8,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 8,
+  },
+  commentAuthor: {
+    fontWeight: "bold",
+    marginRight: 5,
+  },
+  commentText: {
+    flex: 1,
+  },
+  noComments: {
+    textAlign: "center",
+    color: "#999",
+    padding: 10,
+  },
+  commentInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  commentInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 20,
+    padding: 10,
+    marginRight: 10,
+    maxHeight: 100,
+  },
+  commentButton: {
+    backgroundColor: "#007AFF",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  commentButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import PostCard from "../sub_components/PostCard";
 import StyleExample from "../styles/StyleExample";
-import { getHelloWorld } from "../../services/api";
 
 export default function Home({ navigation }) {
   const [selectedCommunity, setSelectedCommunity] = useState("All");
@@ -18,10 +17,6 @@ export default function Home({ navigation }) {
   const filteredPosts = selectedCommunity === "All"
     ? posts
     : posts.filter(post => post.community === selectedCommunity);
-
-  getHelloWorld().then((message) => {
-    console.log(message);
-  });
 
   return (
     <View style={styles.container}>

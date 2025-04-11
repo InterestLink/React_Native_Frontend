@@ -2,18 +2,21 @@ import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ScrollView, Modal, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CommunityList from '../sub_components/CommunityList';
-import ProfilePosts from '../sub_components/ProfilePosts';
+import PostList from '../sub_components/PostList';
 
-const Profile = ({ navigation }) => {
-  // Dummy data
-  const displayName = "First Last";
-  const username = "Username";
-  const userBio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis vel tellus in maximus. Nam pulvinar nulla non finibus aliquam. Curabitur sed libero id augue varius tincidunt. Vivamus ut sapien ut enim interdum scelerisque. Nulla ac dictum lectus, vitae tincidunt purus. Nulla facilisi. Phasellus cursus, ipsum eget sollicitudin iaculis, ex enim sodales turpis, vitae feugiat elit nulla eu sapien. Integer vel nulla sem. Duis condimentum lorem erat, at eleifend elit malesuada non.";
-
-  // Number of Communities, Followers, and Following
-  const numCommunities = 10;
-  const numFollowers = 120;
-  const numFollowing = 80;
+const Profile = ({ navigation, route }) => {
+  // Extract profile data from route params with a fallback to dummy data
+  const { profileData } = route.params || {};
+  
+  // Provide dummy data in case profileData is undefined
+  const {
+    displayName = 'Default Name',
+    username = 'defaultUsername',
+    userBio = 'This is a default bio.',
+    numCommunities = 0,
+    numFollowers = 0,
+    numFollowing = 0,
+  } = profileData || {};
 
   // State to manage the selected view and modal visibility
   const [selectedView, setSelectedView] = useState('Posts');
@@ -67,17 +70,17 @@ const Profile = ({ navigation }) => {
   const renderContent = () => {
     switch (selectedView) {
       case 'Posts':
-        return <ProfilePosts />;
+        return <PostList id={456} isUser={true} navigation={navigation} />; {/* TODO: GET USERID HERE!!!!!!!!!!!!!! */}
       case 'Communities':
-        return <CommunityList navigation={navigation} />;
+        return <CommunityList userId = {123} navigation={navigation} />;
       case 'Followers':
         return <Text>Here is the list of followers...</Text>;
       case 'Following':
         return <Text>Here is the list of following...</Text>;
       case 'Saved':
-        return <ProfilePosts />;
+        return <PostList id={456} isUser={true} navigation={navigation} />; {/* TODO: GET USERID HERE!!!!!!!!!!!!!! ALSO LATER THIS IS FOR SAVED POSTS*/}
       case 'Liked':
-        return <ProfilePosts />;
+        return <PostList id={456} isUser={true} navigation={navigation} />; {/* TODO: GET USERID HERE!!!!!!!!!!!!!! ALSO LATER THIS IS FOR LIKED POSTS*/}
       default:
         return <Text>Here are the user's posts...</Text>;
     }
@@ -254,6 +257,8 @@ const Profile = ({ navigation }) => {
     </SafeAreaView>
   );
 };
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
