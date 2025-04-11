@@ -2,18 +2,20 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ProfileList from '../sub_components/ProfileList';
+import PostList from '../sub_components/ProfileList';
+
 
 
 // dummy screens for posts and members
 const PostsScreen = () => (
   <View style={styles.tabContent}>
-    <Text style={styles.tabText}>Posts will be shown here.</Text>
+    <PostList id={456} isUser={false} /> {/* TODO: GET COMMUNITY ID HERE!!!!!!!!!!!!!! */}
   </View>
 );
 
 const MembersScreen = () => (
   <View style={styles.tabContent}>
-    <ProfileList />
+    <ProfileList id={456} isUser={false} /> {/* TODO: GET COMMUNITY ID HERE!!!!!!!!!!!!!! */}
   </View>
 );
 
