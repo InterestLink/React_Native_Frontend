@@ -3,6 +3,7 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
+import { AuthProvider, useAuth } from "../services/firebase/useAuth";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // Screens
@@ -10,157 +11,79 @@ import Communities from "./screens/Communities";
 import CommunityPage from "./screens/CommunityPage";
 import Home from "./screens/Home";
 import Search from "./screens/Search";
-import Profile from "./screens/Profile"; // Used in the Profile tab and for viewing other profiles
-import EditProfile from "./screens/EditProfile"; // Used for editing the logged-in user's profile
-import Settings from "./screens/Settings"; // Used for app settings
-import Accessibility from "./screens/Accessibility"; // Placeholder for accessibility and language settings
-import Help from "./screens/Help"; // Placeholder for help and support
-import Login from "./screens/Login"; 
-import Moderation from "./screens/Moderation"; // Placeholder for moderation settings
-import ContentSettings from "./screens/ContentSettings"; // Placeholder for content settings
-import About from "./screens/About"; // Placeholder for about section
-import ResetPassword from "./screens/ResetPassword"; // Placeholder for reset password screen
-import Account from "./screens/Account"; // Placeholder for account settings
-import PrivacyAndSecurity from "./screens/PrivacyAndSecurity"; // Placeholder for privacy and security settings
-import Notifications from "./screens/Notifications"; // Placeholder for notifications settings
-import User from "../services/firebase/useAuth";
-
-// Sub Components
+import Profile from "./screens/Profile";
+import EditProfile from "./screens/EditProfile";
+import Settings from "./screens/Settings";
+import Accessibility from "./screens/Accessibility";
+import Help from "./screens/Help";
+import Login from "./screens/Login";
+import Moderation from "./screens/Moderation";
+import ContentSettings from "./screens/ContentSettings";
+import About from "./screens/About";
+import ResetPassword from "./screens/ResetPassword";
+import Account from "./screens/Account";
+import PrivacyAndSecurity from "./screens/PrivacyAndSecurity";
+import Notifications from "./screens/Notifications";
 import MainHeader from "./sub_components/MainHeader";
 import DirectMessages from "./screens/DirectMessages";
 import ChatScreen from "./screens/ChatScreen";
 
+// Tab names
 const communityName = "Communities";
 const homeName = "Home";
 const searchName = "Search";
 const profileName = "Profile";
-const userString = JSON.stringify(User);
 
-console.log(userString);
-
-
-
-// Create a stack for each tab
+// Stacks
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+const RootStack = createStackNavigator();
 
-// Home Stack
+// --- Tab Stacks ---
 function HomeStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen 
-        name="HomeScreen" 
-        component={Home} 
-        options={{ 
-          header: () => <MainHeader />,
-        }} 
-      />
+      <Stack.Screen name="HomeScreen" component={Home} options={{ header: () => <MainHeader /> }} />
     </Stack.Navigator>
   );
 }
 
-// Search Stack
 function SearchStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen 
-        name="SearchScreen" 
-        component={Search} 
-        options={{
-          header: () => <MainHeader />,
-        }} 
-      />
+      <Stack.Screen name="SearchScreen" component={Search} options={{ header: () => <MainHeader /> }} />
     </Stack.Navigator>
   );
 }
 
-// Communities Stack (for listing communities)
 function CommunitiesStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen 
-        name="CommunitiesScreen" 
-        component={Communities} 
-        options={{
-          header: () => <MainHeader />,
-        }} 
-      />
+      <Stack.Screen name="CommunitiesScreen" component={Communities} options={{ header: () => <MainHeader /> }} />
     </Stack.Navigator>
   );
 }
 
-// Profile Stack (for logged-in user profile & edit)
 function ProfileStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen 
-        name="ProfileScreen" 
-        component={Profile} 
-        options={{
-          header: () => <MainHeader />,
-        }}
-      />
-      <Stack.Screen 
-        name="EditProfile" 
-        component={EditProfile}
-        options={{ title: "Edit Profile" }}
-      />
-      <Stack.Screen
-        name="Settings"
-        component={Settings}
-        options={{ title: "Settings" }}
-      />
-      <Stack.Screen
-        name="AccountSettings"
-        component={Account}
-        options={{ title: "Account Settings" }}
-      />
-      <Stack.Screen
-        name="PrivacyAndSecurity" 
-        component={PrivacyAndSecurity}
-        options={{ title: "Privacy and Security" }}
-      />
-      <Stack.Screen
-        name="Notifications" 
-        component={Notifications}
-        options={{ title: "Notifications" }}
-      />
-      <Stack.Screen
-        name="Accessibility" 
-        component={Accessibility}
-        options={{ title: "Accessibility" }}
-      />
-      <Stack.Screen
-        name="Help" 
-        component={Help}
-        options={{ title: "Help" }}
-      />
-      <Stack.Screen
-        name="Moderation" 
-        component={Moderation}
-        options={{ title: "Moderation" }}
-      />
-      <Stack.Screen
-        name="ResetPassword"
-        component={ResetPassword} 
-        options={{ title: "Reset Password" }}
-      />
-      <Stack.Screen
-        name="About" 
-        component={About}
-        options={{ title: "About InterestLink" }}
-      />
-      <Stack.Screen
-        name="ContentSettings" 
-        component={ContentSettings}
-        options={{ title: "Content Settings" }}
-      />
-
+      <Stack.Screen name="ProfileScreen" component={Profile} options={{ header: () => <MainHeader /> }} />
+      <Stack.Screen name="EditProfile" component={EditProfile} options={{ title: "Edit Profile" }} />
+      <Stack.Screen name="Settings" component={Settings} options={{ title: "Settings" }} />
+      <Stack.Screen name="AccountSettings" component={Account} options={{ title: "Account Settings" }} />
+      <Stack.Screen name="PrivacyAndSecurity" component={PrivacyAndSecurity} options={{ title: "Privacy and Security" }} />
+      <Stack.Screen name="Notifications" component={Notifications} options={{ title: "Notifications" }} />
+      <Stack.Screen name="Accessibility" component={Accessibility} options={{ title: "Accessibility" }} />
+      <Stack.Screen name="Help" component={Help} options={{ title: "Help" }} />
+      <Stack.Screen name="Moderation" component={Moderation} options={{ title: "Moderation" }} />
+      <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ title: "Reset Password" }} />
+      <Stack.Screen name="About" component={About} options={{ title: "About InterestLink" }} />
+      <Stack.Screen name="ContentSettings" component={ContentSettings} options={{ title: "Content Settings" }} />
     </Stack.Navigator>
   );
 }
 
-// Tab Navigator for the main tabs
-const Tab = createBottomTabNavigator();
+// --- Tab Navigator ---
 function MainTabs() {
   return (
     <Tab.Navigator
@@ -168,15 +91,10 @@ function MainTabs() {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          if (route.name === homeName) {
-            iconName = focused ? "home" : "home-outline";
-          } else if (route.name === searchName) {
-            iconName = focused ? "search" : "search-outline";
-          } else if (route.name === communityName) {
-            iconName = focused ? "earth" : "earth-outline";
-          } else if (route.name === profileName) {
-            iconName = focused ? "person" : "person-outline";
-          }
+          if (route.name === homeName) iconName = focused ? "home" : "home-outline";
+          else if (route.name === searchName) iconName = focused ? "search" : "search-outline";
+          else if (route.name === communityName) iconName = focused ? "earth" : "earth-outline";
+          else if (route.name === profileName) iconName = focused ? "person" : "person-outline";
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "tomato",
@@ -193,52 +111,46 @@ function MainTabs() {
   );
 }
 
-// Root stack wraps the Tabs and extra screens accessible from anywhere
-const RootStack = createStackNavigator();
+// --- Root Navigator ---
+function MainContainerContent() {
+  const user = useAuth();
+
+  React.useEffect(() => {
+    if (user) {
+      console.log("✅ Logged in UID:", user.uid);
+    } else {
+      console.log("🚫 User not logged in.");
+    }
+  }, [user]);
+
+  return (
+    <NavigationContainer>
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+        {user ? (
+          <>
+            <RootStack.Screen name="MainTabs" component={MainTabs} />
+            <RootStack.Screen name="CommunityPage" component={CommunityPage} />
+            <RootStack.Screen name="UserProfile" component={Profile} />
+            <RootStack.Screen name="DirectMessages" component={DirectMessages} />
+            <RootStack.Screen name="ChatScreen" component={ChatScreen} />
+          </>
+        ) : (
+          <RootStack.Screen name="Login">
+            {({ navigation }) => (
+              <Login navigation={navigation} onLogin={() => navigation.replace("MainTabs")} />
+            )}
+          </RootStack.Screen>
+        )}
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+// --- Exported Component with Provider ---
 export default function MainContainer() {
   return (
-      <NavigationContainer>
-        <RootStack.Navigator>
-          {/* Main Tabs */}
-          <RootStack.Screen 
-            name="MainTabs" 
-            component={MainTabs} 
-            options={{ headerShown: false }} 
-          />
-          {/* Community details screen */}
-          <RootStack.Screen 
-            name="CommunityPage" 
-            component={CommunityPage}
-            options={({ route }) => ({ title: route.params?.community?.name || 'Community' })} 
-          />
-          {/* Generic User Profile screen (for viewing any user's profile) */}
-          <RootStack.Screen 
-            name="UserProfile" 
-            component={Profile}
-            options={({ route }) => ({ title: route.params?.profile?.name || 'Profile' })} 
-          />
-          {/* Direct Message stack */}
-          <RootStack.Screen
-            name="DirectMessages"
-            component={DirectMessages}
-            options={({ route }) => ({ title: route.params?.profile?.name || 'Messages' })} 
-          />
-          {/* Chat Message stack */}
-          <RootStack.Screen
-            name="ChatScreen"
-            component={ChatScreen}
-            options={({ route }) => ({ title: route.params?.profile?.name || 'Chats' })} 
-          />
-          {/* Login screen */}
-          <RootStack.Screen name="Login" options={{ headerShown: false }}>
-            {({ navigation }) => (
-              <Login 
-              navigation={navigation} 
-              onLogin={() => navigation.navigate('MainTabs')}
-              />
-              )}
-              </RootStack.Screen>
-        </RootStack.Navigator>
-      </NavigationContainer>
+    <AuthProvider>
+      <MainContainerContent />
+    </AuthProvider>
   );
 }
