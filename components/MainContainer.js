@@ -3,7 +3,7 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { AuthProvider } from "./GlobalVariables";
+import { AuthProvider } from ".GlobalVariables";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // Screens
