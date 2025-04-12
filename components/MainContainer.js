@@ -3,6 +3,7 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
+import { AuthProvider } from "./GlobalVariables";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // Screens
@@ -191,48 +192,50 @@ function MainTabs() {
 const RootStack = createStackNavigator();
 export default function MainContainer() {
   return (
-    <NavigationContainer>
-      <RootStack.Navigator>
-        {/* Main Tabs */}
-        <RootStack.Screen 
-          name="MainTabs" 
-          component={MainTabs} 
-          options={{ headerShown: false }} 
-        />
-        {/* Community details screen */}
-        <RootStack.Screen 
-          name="CommunityPage" 
-          component={CommunityPage}
-          options={({ route }) => ({ title: route.params?.community?.name || 'Community' })} 
-        />
-        {/* Generic User Profile screen (for viewing any user's profile) */}
-        <RootStack.Screen 
-          name="UserProfile" 
-          component={Profile}
-          options={({ route }) => ({ title: route.params?.profile?.name || 'Profile' })} 
-        />
-        {/* Direct Message stack */}
-        <RootStack.Screen
-          name="DirectMessages"
-          component={DirectMessages}
-          options={({ route }) => ({ title: route.params?.profile?.name || 'Messages' })} 
-        />
-        {/* Chat Message stack */}
-        <RootStack.Screen
-          name="ChatScreen"
-          component={ChatScreen}
-          options={({ route }) => ({ title: route.params?.profile?.name || 'Chats' })} 
-        />
-        {/* Login screen */}
-        <RootStack.Screen name="Login" options={{ headerShown: false }}>
-          {({ navigation }) => (
-            <Login 
-            navigation={navigation} 
-            onLogin={() => navigation.navigate('MainTabs')}
-            />
-            )}
-            </RootStack.Screen>
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <RootStack.Navigator>
+          {/* Main Tabs */}
+          <RootStack.Screen 
+            name="MainTabs" 
+            component={MainTabs} 
+            options={{ headerShown: false }} 
+          />
+          {/* Community details screen */}
+          <RootStack.Screen 
+            name="CommunityPage" 
+            component={CommunityPage}
+            options={({ route }) => ({ title: route.params?.community?.name || 'Community' })} 
+          />
+          {/* Generic User Profile screen (for viewing any user's profile) */}
+          <RootStack.Screen 
+            name="UserProfile" 
+            component={Profile}
+            options={({ route }) => ({ title: route.params?.profile?.name || 'Profile' })} 
+          />
+          {/* Direct Message stack */}
+          <RootStack.Screen
+            name="DirectMessages"
+            component={DirectMessages}
+            options={({ route }) => ({ title: route.params?.profile?.name || 'Messages' })} 
+          />
+          {/* Chat Message stack */}
+          <RootStack.Screen
+            name="ChatScreen"
+            component={ChatScreen}
+            options={({ route }) => ({ title: route.params?.profile?.name || 'Chats' })} 
+          />
+          {/* Login screen */}
+          <RootStack.Screen name="Login" options={{ headerShown: false }}>
+            {({ navigation }) => (
+              <Login 
+              navigation={navigation} 
+              onLogin={() => navigation.navigate('MainTabs')}
+              />
+              )}
+              </RootStack.Screen>
+        </RootStack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
