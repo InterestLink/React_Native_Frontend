@@ -1,9 +1,8 @@
-// CommunityList.js
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import CommunityCard from "./CommunityCard.js";
-import { getCommunities } from "../../services/api.js";
+import CommunityCard from './CommunityCard';
+import { getCommunities } from '../../services/api.js';
 
 const styles = StyleSheet.create({
   pageContainer: {
@@ -16,26 +15,29 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Communities( userId ) {
+export default function CommunityList({ userId }) { // Destructure userId from props
   const navigation = useNavigation();
   const [communities, setCommunities] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Replace with the actual userId if needed
     const fetchCommunities = async () => {
       try {
-        const data = await getCommunities({ userId }); // TODO: REPLACE USER ID HERE GUYSSSSS
+        // Pass the userId to getCommunities
+        const data = await getCommunities({ userId });
         setCommunities(data);
       } catch (error) {
-        console.error("Failed to load communities:", error);
+        console.error('Failed to load communities:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCommunities();
-  }, []);
+    // Only fetch communities if userId is available
+    if (userId) {
+      fetchCommunities();
+    }
+  }, [userId]);
 
   if (loading) {
     return (
