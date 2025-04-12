@@ -80,7 +80,7 @@ export const likePost = async (parameters) => {
 
 // parameters(userId, postId)
 export const savePost = async (parameters) => {
-  const response = await fetch(`${API_URL}savepost`, {
+  const response = await fetch(`${API_URL}savePost`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -108,8 +108,8 @@ export const unlikePost = async (parameters) => {
 
 // parameters(userId, postId)
 export const unSavePost = async (parameters) => {
-  const response = await fetch(`${API_URL}savepost`, {
-    method: 'POST',
+  const response = await fetch(`${API_URL}savePost`, {
+    method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },

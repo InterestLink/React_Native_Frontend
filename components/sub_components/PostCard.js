@@ -2,20 +2,44 @@ import React, { useState } from "react";
 import { 
   View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Share 
 } from "react-native";
+import { likePost, unlikePost, savePost, unSavePost, createComment, getComments } from "../../services/api";
+import { useAuthContext } from "../../components/GlobalVariables";
 
-const PostCard = ({ community, username, content, image, tags }) => {
+const PostCard = ({ id, community, username, content, image, tags }) => {
+  const { userId } = useAuthContext();
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [comments, setComments] = useState([]);
 
-  const handleLike = () => {
-    setLiked(!liked);
-    setLikes(liked ? likes - 1 : likes + 1);
+  const handleLike = async () => {
+    try {
+      if (liked) {
+        await unlikePost({ userId, postId: id });
+        setLikes(likes - 1);
+      } else {
+        await likePost({ userId, postId: id });
+        setLikes(likes + 1);
+      }
+      setLiked(!liked);
+    } catch (error) {
+      console.log("Like error:", error);
+    }
   };
 
   const handleSave = () => {
-    setSaved(!saved);
-  };
+    const handleSave = async () => {
+      try {
+        if (saved) {
+          await unSavePost({ userId, postId: id });
+        } else {
+          await savePost({ userId, postId: id });
+        }
+        setSaved(!saved);
+      } catch (error) {
+        console.log("Save error:", error);
+      }
+    };
 
   const handleShare = async () => {
     try {
@@ -27,8 +51,14 @@ const PostCard = ({ community, username, content, image, tags }) => {
     }
   };
 
-  const handleComment = () => {
-    console.log("Navigate to comment section");
+  const handleComment = async () => {
+    try {
+      const commentData = await getComments({ postId: id });
+      setComments(commentData);
+      console.log("Navigate to comment screen with:", commentData);
+    } catch (error) {
+      console.log("Comment load error:", error);
+    }
   };
 
   return (
@@ -146,5 +176,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
+}
 export default PostCard;

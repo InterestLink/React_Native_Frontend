@@ -13,6 +13,7 @@ import { auth } from "../../services/firebase/firebase"; // Importing auth from 
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInAnonymously,
 } from "firebase/auth";
 import { useFonts } from "expo-font"; // Importing useFonts from expo-font
 
@@ -56,9 +57,18 @@ export default function Login({ navigation, onLogin }) {
     }
   };
 
-  const handleGuestLogin = () => {
-    console.log("Continuing as guest");
-    onLogin();
+  const handleGuestLogin = async () => {
+    try {
+      setIsLoading(true);
+      const { user } = await signInAnonymously(auth);
+      console.log("Anonymous user created with ID:", user.uid);
+      onLogin(); // Proceed with guest flow
+    } catch (error) {
+      console.error("Anonymous login failed:", error);
+      Alert.alert("Guest Error", "Couldn't start guest session");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const [fontsLoaded] = useFonts({
@@ -144,8 +154,8 @@ export default function Login({ navigation, onLogin }) {
       </TouchableOpacity>
 
       {/* Guest Login */}
-      <TouchableOpacity onPress={handleGuestLogin} style={styles.guestButton}>
-        <Text style={styles.guestText}>Continue as Guest</Text>
+      <TouchableOpacity onPress={handleGuestLogin} style={styles.guestButton} disabled={isLoading}>
+        <Text style={styles.guestText}>{isLoading ? "Loading...": "Continue as Guest"}</Text>
       </TouchableOpacity>
     </View>
   );

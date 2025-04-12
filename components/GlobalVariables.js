@@ -13,4 +13,10 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuthContext = () => useContext(AuthContext);
+export const useAuthContext = () => {
+  const user = useContext(AuthContext);
+  return {
+    user,
+    userId: user?.uid // Expose UID directly
+  };
+};
