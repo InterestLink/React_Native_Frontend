@@ -20,6 +20,8 @@ export default function Login({ navigation, onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState(""); // Username state
+  const [displayName, setDisplayName] = useState(""); // Display name state
   const [isSignup, setIsSignup] = useState(false); // Toggle between modes
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
@@ -29,8 +31,8 @@ export default function Login({ navigation, onLogin }) {
       return;
     }
 
-    if (isSignup && password !== confirmPassword) {
-      Alert.alert("Error", "Passwords don't match!");
+    if (isSignup && (!username || !displayName || password !== confirmPassword)) {
+      Alert.alert("Error", "Please fill in all fields and make sure passwords match!");
       return;
     }
 
@@ -80,6 +82,27 @@ export default function Login({ navigation, onLogin }) {
         keyboardType="email-address"
         autoCapitalize="none"
       />
+
+      {/* Username Field (Signup only) */}
+      {isSignup && (
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+        />
+      )}
+
+      {/* Display Name Field (Signup only) */}
+      {isSignup && (
+        <TextInput
+          style={styles.input}
+          placeholder="Display Name"
+          value={displayName}
+          onChangeText={setDisplayName}
+        />
+      )}
 
       {/* Password Field */}
       <TextInput
