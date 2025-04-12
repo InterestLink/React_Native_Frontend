@@ -3,7 +3,6 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { AuthProvider } from ".GlobalVariables";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // Screens
@@ -24,6 +23,7 @@ import ResetPassword from "./screens/ResetPassword"; // Placeholder for reset pa
 import Account from "./screens/Account"; // Placeholder for account settings
 import PrivacyAndSecurity from "./screens/PrivacyAndSecurity"; // Placeholder for privacy and security settings
 import Notifications from "./screens/Notifications"; // Placeholder for notifications settings
+import User from "../services/firebase/useAuth";
 
 // Sub Components
 import MainHeader from "./sub_components/MainHeader";
@@ -34,6 +34,11 @@ const communityName = "Communities";
 const homeName = "Home";
 const searchName = "Search";
 const profileName = "Profile";
+const userString = JSON.stringify(User);
+
+console.log(userString);
+
+
 
 // Create a stack for each tab
 const Stack = createStackNavigator();
@@ -192,7 +197,6 @@ function MainTabs() {
 const RootStack = createStackNavigator();
 export default function MainContainer() {
   return (
-    <AuthProvider>
       <NavigationContainer>
         <RootStack.Navigator>
           {/* Main Tabs */}
@@ -236,6 +240,5 @@ export default function MainContainer() {
               </RootStack.Screen>
         </RootStack.Navigator>
       </NavigationContainer>
-    </AuthProvider>
   );
 }

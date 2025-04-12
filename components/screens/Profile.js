@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ScrollView, Modal, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAuthContext } from "./GlobalVariables";
 import CommunityList from '../sub_components/CommunityList';
 import PostList from '../sub_components/PostList';
 
 const Profile = ({ navigation, route }) => {
   // Extract profile data from route params with a fallback to dummy data
   const { profileData } = route.params || {};
-  const user = useAuthContext();
   
   // Provide dummy data in case profileData is undefined
   const {
@@ -72,17 +70,17 @@ const Profile = ({ navigation, route }) => {
   const renderContent = () => {
     switch (selectedView) {
       case 'Posts':
-        return <PostList id={user} isUser={true} navigation={navigation} />; {/* TODO: GET USERID HERE!!!!!!!!!!!!!! */}
+        return <PostList id={1} isUser={true} navigation={navigation} />; {/* TODO: GET USERID HERE!!!!!!!!!!!!!! */}
       case 'Communities':
-        return <CommunityList userId = {user} navigation={navigation} />;
+        return <CommunityList userId = {1} navigation={navigation} />;
       case 'Followers':
         return <Text>Here is the list of followers...</Text>;
       case 'Following':
         return <Text>Here is the list of following...</Text>;
       case 'Saved':
-        return <PostList id={user} isUser={true} navigation={navigation} />; {/* TODO: GET USERID HERE!!!!!!!!!!!!!! ALSO LATER THIS IS FOR SAVED POSTS*/}
+        return <PostList id={1} isUser={true} navigation={navigation} />; {/* TODO: GET USERID HERE!!!!!!!!!!!!!! ALSO LATER THIS IS FOR SAVED POSTS*/}
       case 'Liked':
-        return <PostList id={user} isUser={true} navigation={navigation} />; {/* TODO: GET USERID HERE!!!!!!!!!!!!!! ALSO LATER THIS IS FOR LIKED POSTS*/}
+        return <PostList id={1} isUser={true} navigation={navigation} />; {/* TODO: GET USERID HERE!!!!!!!!!!!!!! ALSO LATER THIS IS FOR LIKED POSTS*/}
       default:
         return <Text>Here are the user's posts...</Text>;
     }
