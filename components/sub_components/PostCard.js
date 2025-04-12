@@ -27,8 +27,7 @@ const PostCard = ({ id, community, username, content, image, tags }) => {
     }
   };
 
-  const handleSave = () => {
-    const handleSave = async () => {
+  const handleSave = async () => {
       try {
         if (saved) {
           await unSavePost({ userId, postId: id });
@@ -176,5 +175,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-}
+
 export default PostCard;

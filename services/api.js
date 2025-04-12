@@ -1,4 +1,29 @@
-import { API_URL, API_KEY } from "@env";
+import { API_URL} from "@env";
+
+// SEARCH CALLS BELOW <------------------------------------------------------------------------>
+// Search posts by keywords
+// parameters{String} query - seach term
+// returns = Array<{userId: number, communityId: number, communityName: string, username: string, image: string}>
+export const searchPosts = async (query) => {
+  const response = await fetch(`${API_URL}searchPosts?query=${encodeURIComponent(query)}`);
+  return response.json();
+};
+
+// Search users by username/displayName
+// parameters{String} query - seach term
+// returns = Array<{userId: number, username: string, displayName: string}>
+export const searchUsers = async (query) => {
+  const response = await fetch(`${API_URL}searchUsers?query=${encodeURIComponent(query)}`);
+  return response.json();
+};
+
+// Search communities by name/description
+// parameters{String} query - seach term
+// returns = Array<{id: number, name: string, description: string, memberCount: number}>
+export const searchCommunities = async (query) => {
+  const response = await fetch(`${API_URL}searchCommunities?query=${encodeURIComponent(query)}`);
+  return response.json();
+};
 
 // GET CALLS BELOW <------------------------------------------------------------------------>
 
