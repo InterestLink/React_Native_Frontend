@@ -48,7 +48,7 @@ export const getUser = async (parameters) => {
   }
 
   // Construct the API URL for fetching user profile
-  const url = `${API_URL}/getUser?${queryParams.toString()}`;
+  const url = `${API_URL}getUser?${queryParams.toString()}`;
 
   try {
     console.log("📡 Fetching user profile from:", url);
