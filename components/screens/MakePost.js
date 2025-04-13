@@ -5,20 +5,52 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  StyleSheet
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons'; // Make sure to install if not already
+import { createPost } from '../../services/api';
+import { getAuth } from 'firebase/auth';
 
 export default function MakePost({ navigation }) {
   const [content, setContent] = useState('');
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(null); // Placeholder for image picker later
   const [selectedCommunity, setSelectedCommunity] = useState(null);
+  const [isPosting, setIsPosting] = useState(false);
 
-  const handlePost = () => {
-    console.log('Post content:', content);
-    console.log('Post image:', image);
-    navigation.goBack();
+  const handlePost = async () => {
+    if (!content.trim()) {
+      Alert.alert('Post content is required');
+      return;
+    }
+
+    const user = getAuth().currentUser;
+    if (!user) {
+      Alert.alert('You must be logged in to post');
+      return;
+    }
+
+    const payload = {
+      userId: user.uid,
+      username: user.username || 'Anonymous',
+      communityId: selectedCommunity?.id || null,
+      communityName: selectedCommunity?.name || null,
+      image: image || null,
+      content: content.trim(),
+    };
+
+    try {
+      setIsPosting(true);
+      await createPost(payload);
+      navigation.goBack();
+    } catch (err) {
+      console.error('Error creating post:', err);
+      Alert.alert('Error creating post');
+    } finally {
+      setIsPosting(false);
+    }
   };
 
   // Fallback icon component if image doesn't load
@@ -38,8 +70,12 @@ export default function MakePost({ navigation }) {
           <Text style={styles.cancel}>Cancel</Text>
         </TouchableOpacity>
         <Text style={styles.title}>New Post</Text>
-        <TouchableOpacity onPress={handlePost}>
-          <Text style={styles.post}>Post</Text>
+        <TouchableOpacity onPress={handlePost} disabled={isPosting}>
+          {isPosting ? (
+            <ActivityIndicator size="small" color="#007AFF" />
+          ) : (
+            <Text style={styles.post}>Post</Text>
+          )}
         </TouchableOpacity>
       </View>
 
@@ -65,7 +101,9 @@ export default function MakePost({ navigation }) {
             </View>
           </View>
         ) : (
-          <Text style={styles.selectPrompt}>Post to your profile or select a community...</Text>
+          <Text style={styles.selectPrompt}>
+            Post to your profile or select a community...
+          </Text>
         )}
       </TouchableOpacity>
 
