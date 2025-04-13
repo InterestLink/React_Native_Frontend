@@ -26,7 +26,7 @@ const PostCard = ({
   tags,
   likeCount = 0,
   likedByUser = false,
-  profile_picture = null, // NEW: Accept profile picture prop
+  profile_picture = null, 
 }) => {
   const user = useAuth();
   const userId = user?.uid || null;

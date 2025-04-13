@@ -49,6 +49,7 @@ const Home = () => {
       likeCount={item.likes} 
       username={item.username} 
       community={item.name}
+      profile_picture={item.profile_picture}
       tags={[]} // Empty array if tags aren't part of the payload
     />
   );
