@@ -1,9 +1,8 @@
-import { StyleSheet, View, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useFonts } from 'expo-font';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 import { createStackNavigator } from '@react-navigation/stack';
-import DirectMessages  from '../screens/DirectMessages.js';
-import ChatScreen  from '../screens/ChatScreen.js';
+import Ionicons from 'react-native-vector-icons/Ionicons'; // Import Ionicons for icons
 
 const Stack = createStackNavigator();
 
@@ -27,10 +26,11 @@ const HeaderStyle = StyleSheet.create({
     logoContainer: {
         padding: 8,
     },
+    iconContainer: {
+        padding: 10,
+        maginTop: 5,
+    },
     icon: {
-        width: 30, 
-        height: 30, 
-        marginTop: 13,
     },
 });
 
@@ -46,7 +46,7 @@ export default function MainHeader() {
     }
 
     const handlePress = () => {
-        navigation.navigate('DirectMessages'); // Navigate to the DirectMessages screen
+        navigation.navigate('Messages', { screen: 'DirectMessages' }); // Navigate to the DirectMessages screen
     };
 
     return (
@@ -55,10 +55,15 @@ export default function MainHeader() {
                 <View style={HeaderStyle.logoContainer}>
                     <Text style={HeaderStyle.logo}>InterestLink</Text>
                 </View>
-                <TouchableOpacity onPress={handlePress}>
-                    <Image 
-                        source={require('../../assets/images/chaticon.png')} 
-                        style={HeaderStyle.icon} 
+                <TouchableOpacity onPress={handlePress}
+                    style={HeaderStyle.iconContainer}
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increase touchable area
+                    >
+                    <Ionicons 
+                        name="chatbubble-outline" 
+                        size={28} 
+                        style={HeaderStyle.icon}
+                        color="gray"
                     />
                 </TouchableOpacity>
             </View>

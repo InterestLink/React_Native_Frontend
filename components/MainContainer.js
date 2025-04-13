@@ -89,6 +89,15 @@ function ProfileStack() {
   );
 }
 
+function MessagesStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="DirectMessages" component={DirectMessages} options={{ title: "Messages" }} />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} options={({ route }) => ({ title: route.params.conversationName })} />
+    </Stack.Navigator>
+  );
+}
+
 // --- Tab Navigator ---
 function MainTabs() {
   return (
@@ -158,8 +167,7 @@ function MainContainerContent() {
             <RootStack.Screen name="MakePost" component={MakePost} />
             <RootStack.Screen name="CommunityPage" component={CommunityPage} />
             <RootStack.Screen name="UserProfile" component={Profile} />
-            <RootStack.Screen name="DirectMessages" component={DirectMessages} />
-            <RootStack.Screen name="ChatScreen" component={ChatScreen} />
+            <RootStack.Screen name="Messages" component={MessagesStack} />
           </>
         ) : (
           <RootStack.Screen name="Login">
