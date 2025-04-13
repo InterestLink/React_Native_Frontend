@@ -7,17 +7,7 @@ import { useAuth } from '../../services/firebase/useAuth'; // 🔥 Added to get 
 
 const Profile = ({ navigation, route }) => {
   const { profileData } = route.params || {};
-  const user = useAuth(); // 🔥 Get current user
-  const userId = user?.uid || null;
-
-  const {
-    displayName = 'Default Name',
-    username = 'defaultUsername',
-    userBio = 'This is a default bio.',
-    numCommunities = 0,
-    numFollowers = 0,
-    numFollowing = 0,
-  } = profileData || {};
+  const user = useAuth();
 
   const [selectedView, setSelectedView] = useState('Posts');
   const [isFollowersModalVisible, setFollowersModalVisible] = useState(false);
@@ -28,7 +18,7 @@ const Profile = ({ navigation, route }) => {
 const handleShare = async () => {
   try {
     await Share.share({
-      message: `Check out ${displayName}'s profile (@${username}) on our app!`,
+      message: `Check out ${payload.display_name}'s profile (@${payload.display_name}) on our app!`,
     });
   } catch (error) {
     console.error("Error sharing:", error);
@@ -46,17 +36,17 @@ const handleShare = async () => {
   const renderContent = () => {
     switch (selectedView) {
       case 'Posts':
-        return <PostList id={userId} isUser={true} navigation={navigation} />;
+        return <PostList id={profileData.user_id} isUser={true} navigation={navigation} />;
       case 'Communities':
-        return <CommunityList userId={userId} navigation={navigation} />;
+        return <CommunityList userId={profileData.user_id} navigation={navigation} />;
       case 'Followers':
         return <Text>Here is the list of followers...</Text>;
       case 'Following':
         return <Text>Here is the list of following...</Text>;
       case 'Saved':
-        return <PostList id={userId} isUser={true} navigation={navigation} />;
+        return <PostList id={profileData.user_id} isUser={true} navigation={navigation} />;
       case 'Liked':
-        return <PostList id={userId} isUser={true} navigation={navigation} />;
+        return <PostList id={profileData.user_id} isUser={true} navigation={navigation} />;
       default:
         return <Text>Here are the user's posts...</Text>;
     }
