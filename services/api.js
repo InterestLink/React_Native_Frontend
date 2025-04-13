@@ -39,9 +39,19 @@ export const getUser = async (parameters) => {
   return await fetchWithParams("getUser", parameters);
 };
 
-// parameters = { id: 123, isUser: true } Returns list of profiles in specified community or user (friends) depending on isUser (id, name, icon)
-export const getProfileLists = async (parameters) => {
-  return await fetchWithParams("getProfileLists", parameters);
+// Get members of a community
+export const getCommunityMembers = async (communityId) => {
+  return await fetchWithParams("getProfileLists", { id: communityId, isUser: false });
+};
+
+// Get followers of a user
+export const getUserFollowers = async (userId) => {
+  return await fetchWithParams("getProfileLists", { id: userId, isUser: true, type: "followers" });
+};
+
+// Get users the user is following
+export const getUserFollowing = async (userId) => {
+  return await fetchWithParams("getProfileLists", { id: userId, isUser: true, type: "following" });
 };
 
 // parameters = { userId: 123 } Returns list of communities that specified user is in (id, name, picture)
