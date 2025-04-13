@@ -88,7 +88,20 @@ export const getComments = async (parameters) => {
 
 // POST CALLS BELOW <------------------------------------------------------------------------>
 
-// Add comment (userId, username, content, postId)
+// (userId, displayName, username, bio)
+export const updateUser = async (parameters) => {
+  const response = await fetch(`${API_URL}createComment`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      // 'Authorization': `Bearer ${API_KEY}` // Uncomment if needed
+    },
+    body: JSON.stringify(parameters),
+  });
+  const data = await response.json();
+  return data.body;
+};
+
 export const createComment = async (parameters) => {
   const response = await fetch(`${API_URL}createComment`, {
     method: 'POST',
