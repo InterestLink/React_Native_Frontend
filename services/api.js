@@ -98,7 +98,35 @@ export const createPost = async (parameters) => {
   return data.body;
 };
 
-// parameters(userId, postId)
+// parameters (userId, username, displayName, profilePicture)
+export const createUser = async (parameters) => {
+  const response = await fetch(`${API_URL}createUser`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      // 'Authorization': `Bearer ${API_KEY}` // Uncomment if needed
+    },
+    body: JSON.stringify(parameters),
+  });
+  const data = await response.json();
+  return data.body;
+};
+
+// parameters (guestId)
+export const createGuestUser = async (parameters) => {
+  const response = await fetch(`${API_URL}createUser`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      // 'Authorization': `Bearer ${API_KEY}` // Uncomment if needed
+    },
+    body: JSON.stringify(parameters),
+  });
+  const data = await response.json();
+  return data.body;
+};
+
+// parameters (userId, postId)
 export const likePost = async (parameters) => {
   const response = await fetch(`${API_URL}likePost`, {
     method: 'POST',

@@ -16,6 +16,8 @@ import {
   signInAnonymously,
 } from "firebase/auth";
 import { useFonts } from "expo-font"; // Importing useFonts from expo-font
+import { createUser } from "../../services/api.js"
+import { createGuestUser } from "../../services/api.js"
 
 export default function Login({ navigation, onLogin }) {
   const [email, setEmail] = useState("");
@@ -41,7 +43,13 @@ export default function Login({ navigation, onLogin }) {
     try {
       if (isSignup) {
         // Signup
-        await createUserWithEmailAndPassword(auth, email, password);
+        const { user} = await createUserWithEmailAndPassword(auth, email, password);
+        createUser({
+          userId: user.uid,
+          username: username,
+          displayName: user.displayName,
+          profilePicture: "https://fastly.picsum.photos/id/866/200/300",
+        })
         Alert.alert("Success", "Account created successfully!");
       } else {
         // Login
@@ -62,6 +70,7 @@ export default function Login({ navigation, onLogin }) {
       setIsLoading(true);
       const { user } = await signInAnonymously(auth);
       console.log("Anonymous user created with ID:", user.uid);
+      createGuestUser({guestId: user.uid})
       onLogin(); // Proceed with guest flow
     } catch (error) {
       console.error("Anonymous login failed:", error);
