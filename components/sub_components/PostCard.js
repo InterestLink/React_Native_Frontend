@@ -3,10 +3,11 @@ import {
   View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Share 
 } from "react-native";
 import { likePost, unlikePost, savePost, unSavePost, createComment, getComments } from "../../services/api";
-import { useAuthContext } from "../../components/GlobalVariables";
+import { useAuth } from '../../services/firebase/useAuth'; // 🔥 Added to get current user UID
 
 const PostCard = ({ id, community, username, content, image, tags }) => {
-  const { userId } = useAuthContext();
+  const user = useAuth(); // 🔥 Get current user
+  const userId = user?.uid || null;
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);

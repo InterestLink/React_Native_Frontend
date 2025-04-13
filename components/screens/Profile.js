@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ScrollView, Modal, Button } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ScrollView, Modal, Button, Share } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CommunityList from '../sub_components/CommunityList';
 import PostList from '../sub_components/PostList';
@@ -25,28 +25,15 @@ const Profile = ({ navigation, route }) => {
   const [isCommunitiesModalVisible, setCommunitiesModalVisible] = useState(false);
   const [isBioExpanded, setIsBioExpanded] = useState(false);
 
-  const handleShare = () => {
-    Alert.alert(
-      "Share",
-      "Choose an option:",
-      [
-        {
-          text: "Copy Username",
-          onPress: () => {
-            Alert.alert("Copied", "Username copied to clipboard.");
-          },
-        },
-        {
-          text: "Share",
-          onPress: () => {
-            Alert.alert("Share", "Sharing via social media or messaging...");
-          },
-        },
-        { text: "Cancel", style: "cancel" },
-      ],
-      { cancelable: true }
-    );
-  };
+const handleShare = async () => {
+  try {
+    await Share.share({
+      message: `Check out ${displayName}'s profile (@${username}) on our app!`,
+    });
+  } catch (error) {
+    console.error("Error sharing:", error);
+  }
+};
 
   const handleEdit = () => {
     navigation.navigate('EditProfile');

@@ -113,11 +113,13 @@ function MainTabs() {
 
 // --- Root Navigator ---
 function MainContainerContent() {
-  const user = useAuth();
+
+  const { user } = useAuth(); // 🔥 Moved inside the component
+  const userId = user?.uid || null;
 
   React.useEffect(() => {
     if (user) {
-      console.log("✅ Logged in UID:", user.uid);
+      console.log("✅ Logged in UID:", userId);
     } else {
       console.log("🚫 User not logged in.");
     }
