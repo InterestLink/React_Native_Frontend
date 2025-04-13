@@ -1,4 +1,3 @@
-// ProfileList.js
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, StyleSheet, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -40,12 +39,7 @@ export default function ProfileList({ id, isUser }) {
 
   if (loading) {
     return (
-      <View
-        style={[
-          styles.pageContainer,
-          { justifyContent: "center", alignItems: "center" },
-        ]}
-      >
+      <View style={[styles.pageContainer, { justifyContent: "center", alignItems: "center" }]}>
         <ActivityIndicator size="large" />
       </View>
     );
@@ -57,14 +51,27 @@ export default function ProfileList({ id, isUser }) {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        {profiles.map((profile) => (
-          <ProfileCard
-            key={profile.id}
-            name={profile.name}
-            icon={profile.icon}
-            onPress={() => navigation.navigate("UserProfile", { profile })}
-          />
-        ))}
+        {profiles.map((profile) => {
+          const profileData = {
+            user_id: profile.id,
+            display_name: profile.name || "Unnamed",
+            icon: profile.icon || null,
+            username: profile.username || "Anonymous",
+            bio: profile.bio || "",
+            followers: profile.followers || 0,
+            following: profile.following || 0,
+            communities: profile.communities || 0,
+          };
+
+          return (
+            <ProfileCard
+              key={profile.id}
+              name={profile.name}
+              icon={profile.icon}
+              onPress={() => navigation.navigate("UserProfile", { profileData })}
+            />
+          );
+        })}
       </ScrollView>
     </View>
   );

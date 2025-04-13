@@ -168,8 +168,8 @@ export const createPost = async (parameters) => {
 };
 
 // parameters (userId, username, displayName, profilePicture)
-export const createUser = async (parameters) => {
-  const response = await fetch(`${API_URL}createUser`, {
+export const postUser = async (parameters) => {
+  const response = await fetch(`${API_URL}postUser`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

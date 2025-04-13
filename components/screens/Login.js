@@ -16,7 +16,7 @@ import {
   signInAnonymously,
 } from "firebase/auth";
 import { useFonts } from "expo-font"; // Importing useFonts from expo-font
-import { createUser } from "../../services/api.js"
+import { postUser } from "../../services/api.js"
 import { createGuestUser } from "../../services/api.js"
 
 export default function Login({ navigation, onLogin }) {
@@ -44,11 +44,11 @@ export default function Login({ navigation, onLogin }) {
       if (isSignup) {
         // Signup
         const { user} = await createUserWithEmailAndPassword(auth, email, password);
-        createUser({
-          userId: user.uid,
+        postUser({
+          user_id: user.uid,
           username: username,
-          displayName: user.displayName,
-          profilePicture: "https://fastly.picsum.photos/id/866/200/300",
+          display_name: user.displayName,
+          profile_picture: "https://fastly.picsum.photos/id/866/200/300",
         })
         Alert.alert("Success", "Account created successfully!");
       } else {
