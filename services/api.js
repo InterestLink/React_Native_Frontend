@@ -119,6 +119,27 @@ export const getPosts = async (parameters) => {
   return await response.json();
 };
 
+// parameters = { id: 123, isUser: true, userSaved: true, userLiked: false  } Returns communities or profile posts dependent on isUser, if isUser, check if userSaved or userLinked to return liked/saved posts or false on both for default. (id, username, content, image)
+export const getHomepage = async (parameters) => {
+  const url = `${API_URL}/getHomepage`;
+
+  console.log("📡 Fetching posts from:", url);
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    console.error("❌ HTTP status:", response.status);
+    throw new Error('Network response was not ok');
+  }
+
+  return await response.json();
+};
+
 
 export const getComments = async (parameters) => {
   return await fetchWithParams("getComments", parameters);
