@@ -62,7 +62,7 @@ export const getCommunities = async (parameters) => {
 // parameters = { id: 123, isUser: true, userSaved: true, userLiked: false  } Returns communities or profile posts dependent on isUser, if isUser, check if userSaved or userLinked to return liked/saved posts or false on both for default. (id, username, content, image)
 export const getPosts = async (parameters) => {
   const { id = 1 } = parameters;
-  const url = `${API_URL}/getPosts?id=${id}`;
+  const url = API_URL + "/getPosts?id=${id}";
 
   console.log("📡 Fetching posts from:", url);
 
@@ -90,7 +90,7 @@ export const getComments = async (parameters) => {
 
 // (userId, displayName, username, bio)
 export const updateUser = async (parameters) => {
-  const response = await fetch(`${API_URL}createComment`, {
+  const response = await fetch(API_URL + "createComment", {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ export const updateUser = async (parameters) => {
 };
 
 export const createComment = async (parameters) => {
-  const response = await fetch(`${API_URL}createComment`, {
+  const response = await fetch(API_URL + "createComment", {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ export const createComment = async (parameters) => {
 
 // parameters = { userId: 123, communityId: 321, communityName: nameHere, username: nameHere, image: urlHere } 
 export const createPost = async (parameters) => {
-  const response = await fetch(`${API_URL}createPost`, {
+  const response = await fetch(API_URL + "createPost", {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -131,21 +131,27 @@ export const createPost = async (parameters) => {
 
 // parameters (userId, username, displayName, profilePicture)
 export const postUser = async (parameters) => {
-  const response = await fetch(`${API_URL}postUser`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // 'Authorization': `Bearer ${API_KEY}` // Uncomment if needed
-    },
-    body: JSON.stringify(parameters),
-  });
-  const data = await response.json();
-  return data.body;
+  try {
+    const response = await fetch(API_URL + "postUser", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Authorization': `Bearer ${API_KEY}` // Uncomment if needed
+      },
+      body: JSON.stringify(parameters),
+    });
+
+    const data = await response.json();
+    return JSON.parse(data.body);
+    
+  } catch (error) {
+    throw error;
+  }
 };
 
 // parameters (guestId)
 export const createGuestUser = async (parameters) => {
-  const response = await fetch(`${API_URL}createUser`, {
+  const response = await fetch(API_URL + "createUser", {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -159,7 +165,7 @@ export const createGuestUser = async (parameters) => {
 
 // parameters (userId, postId)
 export const likePost = async (parameters) => {
-  const response = await fetch(`${API_URL}likePost`, {
+  const response = await fetch(API_URL + "likePost", {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -172,7 +178,7 @@ export const likePost = async (parameters) => {
 
 // parameters(userId, postId)
 export const savePost = async (parameters) => {
-  const response = await fetch(`${API_URL}savePost`, {
+  const response = await fetch(API_URL + "savePost", {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -187,7 +193,7 @@ export const savePost = async (parameters) => {
 
 // parameters(userId, postId)
 export const unlikePost = async (parameters) => {
-  const response = await fetch(`${API_URL}likePost`, {
+  const response = await fetch(API_URL + "likePost", {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -200,7 +206,7 @@ export const unlikePost = async (parameters) => {
 
 // parameters(userId, postId)
 export const unSavePost = async (parameters) => {
-  const response = await fetch(`${API_URL}savePost`, {
+  const response = await fetch(API_URL + "savePost", {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
