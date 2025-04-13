@@ -57,6 +57,7 @@ const PostList = ({ id, isUser = false, navigation }) => {
       likeCount={item.likes}
       username={item.username}
       community={item.name}
+      profile_picture={item.profile_picture}
       tags={[]} // Update if tags are returned later
     />
   );
