@@ -35,9 +35,47 @@ export const searchCommunities = async (parameters) => {
 
 // parameters = { userId: 123, returnAll: true }
 // if returnAll return all of the user profile (displayName, username, userBio, numCommunities = 0, numFollowers, numFollowing)
+// parameters = { userId: 123, returnAll: true }
+// if returnAll is true, return all user profile data (displayName, username, userBio, numCommunities, numFollowers, numFollowing)
 export const getUser = async (parameters) => {
-  return await fetchWithParams("getUser", parameters);
+  const { userId, returnAll } = parameters;
+
+  // Build the query string
+  const queryParams = new URLSearchParams();
+  queryParams.append("user_id", userId);
+  if (returnAll) {
+    queryParams.append("returnAll", returnAll);
+  }
+
+  // Construct the API URL for fetching user profile
+  const url = `${API_URL}getUser?${queryParams.toString()}`;
+
+  try {
+    console.log("📡 Fetching user profile from:", url);
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    // Handle non-OK responses
+    if (!response.ok) {
+      console.error("❌ HTTP status:", response.status);
+      throw new Error('Failed to fetch user data');
+    }
+
+    // Parse the response and return the data
+    const data = await response.json();
+    console.log("data.body = ", data);
+    return data; // Assuming the response has a `body` property
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error; // Rethrow the error to be handled by the caller
+  }
 };
+
 
 // Get members of a community
 export const getCommunityMembers = async (communityId) => {
@@ -62,6 +100,28 @@ export const getCommunities = async (parameters) => {
 // parameters = { id: 123, isUser: true, userSaved: true, userLiked: false  } Returns communities or profile posts dependent on isUser, if isUser, check if userSaved or userLinked to return liked/saved posts or false on both for default. (id, username, content, image)
 export const getPosts = async (parameters) => {
   const { id = 1 } = parameters;
+  const url = `${API_URL}getPosts?id=${id}`;
+
+  console.log("📡 Fetching posts from:", url);
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    console.error("❌ HTTP status:", response.status);
+    throw new Error('Network response was not ok');
+  }
+
+  return await response.json();
+};
+
+// parameters = { id: 123, isUser: true, userSaved: true, userLiked: false  } Returns communities or profile posts dependent on isUser, if isUser, check if userSaved or userLinked to return liked/saved posts or false on both for default. (id, username, content, image)
+export const getHomepage = async (parameters) => {
+  const url = `${API_URL}getHomepage`;
   const url = API_URL + "/getPosts?id=${id}";
 
   console.log("📡 Fetching posts from:", url);

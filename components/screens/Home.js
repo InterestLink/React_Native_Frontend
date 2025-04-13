@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, RefreshControl } from "react-native";
-import { getPosts } from "../../services/api";
+import { getHomepage } from "../../services/api";
 import PostCard from "../sub_components/PostCard";
 
 const Home = () => {
-  const userId = 1; // Hardcoded user ID for testing
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,8 +12,7 @@ const Home = () => {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const data = await getPosts({
-        id: userId,
+      const data = await getHomepage({
         isUser: true,
       });
 

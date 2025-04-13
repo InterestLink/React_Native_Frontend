@@ -1,81 +1,94 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, ActivityIndicator, Text } from "react-native";
-import PostCard from "./PostCard";
-import { getPosts } from "../../services/api"; // Make sure the import path is correct
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
+import { getPosts } from '../../services/api';
+import PostCard from './PostCard';
 
-const PostList = ({ id, isUser }) => {
+const PostList = ({ id, isUser = false, navigation }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const data = await getPosts({
+        id,
+        isUser,
+      });
+
+      // Handle either raw or wrapped response
+      const postsArray = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.body)
+        ? data.body
+        : [];
+
+      setPosts(postsArray);
+    } catch (error) {
+      console.error('Failed to fetch posts:', error);
+      setPosts([]);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const data = await getPosts({ id, isUser });
-
-        // ✅ Defensive check in case data is null/undefined or not an array
-        if (Array.isArray(data)) {
-          setPosts(data);
-        } else {
-          console.warn("getPosts() did not return an array:", data);
-          setPosts([]); // fallback to empty
-        }
-      } catch (error) {
-        console.error("Failed to fetch posts:", error);
-        setPosts([]); // fallback to empty even on error
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPosts();
-  }, [id, isUser]);
+  }, [id]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchPosts();
+  };
+
+  const renderItem = ({ item }) => (
+    <PostCard
+      id={item.post_id}
+      content={item.content}
+      image={item.image}
+      likeCount={item.likes}
+      username={item.username}
+      community={item.name}
+      tags={[]} // Update if tags are returned later
+    />
+  );
 
   if (loading) {
-    return (
-      <ScrollView
-        style={styles.container}
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-        overScrollMode="never"
-      >
-        <ActivityIndicator size="large" />
-      </ScrollView>
-    );
+    return <ActivityIndicator size="large" color="#000" style={{ marginTop: 30 }} />;
+  }
+
+  if (!posts.length) {
+    return <Text style={styles.emptyText}>No posts to show.</Text>;
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      bounces={false}
-      showsVerticalScrollIndicator={false}
-      overScrollMode="never"
-    >
-      {(posts || []).length > 0 ? (
-        posts.map((post) => (
-          <PostCard
-            key={post.id || Math.random().toString()}
-            username={post.username}
-            content={post.content}
-            image={post.image}
-          />
-        ))
-      ) : (
-        <Text style={styles.emptyText}>No posts to display.</Text>
-      )}
-    </ScrollView>
+    <FlatList
+      data={posts}
+      keyExtractor={(item, index) => (item?.post_id ? item.post_id.toString() : index.toString())}
+      renderItem={renderItem}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      contentContainerStyle={styles.list}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
+  list: {
+    paddingBottom: 20,
   },
   emptyText: {
-    textAlign: "center",
-    marginTop: 20,
-    color: "#888",
+    textAlign: 'center',
+    marginTop: 50,
     fontSize: 16,
+    color: '#555',
   },
 });
 
