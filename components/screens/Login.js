@@ -45,10 +45,10 @@ export default function Login({ navigation, onLogin }) {
         // Signup
         const { user} = await createUserWithEmailAndPassword(auth, email, password);
         createUser({
-          userId: user.uid,
+          user_id: user.uid,
           username: username,
-          displayName: user.displayName,
-          profilePicture: "https://fastly.picsum.photos/id/866/200/300",
+          display_name: user.displayName,
+          profile_picture: "https://fastly.picsum.photos/id/866/200/300",
         })
         Alert.alert("Success", "Account created successfully!");
       } else {

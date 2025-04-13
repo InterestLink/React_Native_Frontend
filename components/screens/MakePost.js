@@ -33,10 +33,10 @@ export default function MakePost({ navigation }) {
     }
 
     const payload = {
-      userId: user.uid,
+      user_id: user.uid,
       username: user.username || 'Anonymous',
-      communityId: selectedCommunity?.id || null,
-      communityName: selectedCommunity?.name || null,
+      community_id: selectedCommunity?.id || null,
+      community_name: selectedCommunity?.name || null,
       image: image || null,
       content: content.trim(),
     };
