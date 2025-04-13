@@ -1,39 +1,37 @@
 import { API_URL} from "@env";
 
-// SEARCH CALLS BELOW <------------------------------------------------------------------------>
-// Search posts by keywords
-// parameters{String} query - seach term
-// returns = Array<{userId: number, communityId: number, communityName: string, username: string, image: string}>
-export const searchPosts = async (query) => {
-  const response = await fetch(`${API_URL}searchPosts?query=${encodeURIComponent(query)}`);
-  return response.json();
-};
-
-// Search users by username/displayName
-// parameters{String} query - seach term
-// returns = Array<{userId: number, username: string, displayName: string}>
-export const searchUsers = async (query) => {
-  const response = await fetch(`${API_URL}searchUsers?query=${encodeURIComponent(query)}`);
-  return response.json();
-};
-
-// Search communities by name/description
-// parameters{String} query - seach term
-// returns = Array<{id: number, name: string, description: string, memberCount: number}>
-export const searchCommunities = async (query) => {
-  const response = await fetch(`${API_URL}searchCommunities?query=${encodeURIComponent(query)}`);
-  return response.json();
-};
-
-// GET CALLS BELOW <------------------------------------------------------------------------>
-
 // Shared utility for GET requests with query parameters
 const fetchWithParams = async (endpoint, parameters) => {
   const params = new URLSearchParams(parameters);
   const response = await fetch(`${API_URL}${endpoint}?${params}`);
   const data = await response.json();
-  return data.body;
+  return data;
 };
+
+// SEARCH CALLS BELOW <------------------------------------------------------------------------>
+
+// Search posts by keywords
+// parameters {String} query - search term
+// returns = Array<{userId: number, communityId: number, communityName: string, username: string, image: string}>
+export const searchPosts = async (parameters) => {
+  return await fetchWithParams('searchPosts', { parameters });
+};
+
+// Search users by username/displayName
+// parameters {String} query - search term
+// returns = Array<{userId: number, username: string, displayName: string}>
+export const searchUsers = async (parameters) => {
+  return await fetchWithParams('searchUsers', { parameters });
+};
+
+// Search communities by name/description
+// parameters {String} query - search term
+// returns = Array<{id: number, name: string, description: string, memberCount: number}>
+export const searchCommunities = async (parameters) => {
+  return await fetchWithParams('searchCommunities', { parameters });
+};
+
+// GET CALLS BELOW <------------------------------------------------------------------------>
 
 // parameters = { userId: 123, returnAll: true }
 // if returnAll return all of the user profile (displayName, username, userBio, numCommunities = 0, numFollowers, numFollowing)
