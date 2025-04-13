@@ -1,9 +1,21 @@
 import React, { useState } from "react";
-import { 
-  View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Share 
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Share,
 } from "react-native";
-import { likePost, unlikePost, savePost, unSavePost, createComment, getComments } from "../../services/api";
-import { useAuth } from '../../services/firebase/useAuth';
+import {
+  likePost,
+  unlikePost,
+  savePost,
+  unSavePost,
+  getComments,
+} from "../../services/api";
+import { useAuth } from "../../services/firebase/useAuth";
 
 const PostCard = ({
   id,
@@ -14,6 +26,7 @@ const PostCard = ({
   tags,
   likeCount = 0,
   likedByUser = false,
+  profile_picture = null, // NEW: Accept profile picture prop
 }) => {
   const user = useAuth();
   const userId = user?.uid || null;
@@ -74,7 +87,20 @@ const PostCard = ({
   return (
     <View style={styles.postContainer}>
       <Text style={styles.community}>{community}</Text>
-      <Text style={styles.username}>{username}</Text>
+
+      {/* Username & Profile Pic */}
+      <View style={styles.userInfo}>
+        <Image
+          source={
+            profile_picture
+              ? { uri: profile_picture }
+              : require("../../assets/images/default_pfp.jpg")
+          }
+          style={styles.profilePic}
+        />
+        <Text style={styles.username}>{username}</Text>
+      </View>
+
       <Text style={styles.content}>{content}</Text>
       {image && <Image source={{ uri: image }} style={styles.image} />}
 
@@ -91,23 +117,37 @@ const PostCard = ({
       <View style={styles.actions}>
         <TouchableOpacity onPress={handleLike} style={styles.actionButton}>
           <Image
-            source={liked ? require("../../assets/images/like-filled.png") : require("../../assets/images/like.png")}
+            source={
+              liked
+                ? require("../../assets/images/like-filled.png")
+                : require("../../assets/images/like.png")
+            }
             style={styles.icon}
           />
           <Text style={styles.likeCount}>{likes}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={handleComment} style={styles.actionButton}>
-          <Image source={require("../../assets/images/comment.png")} style={styles.icon} />
+          <Image
+            source={require("../../assets/images/comment.png")}
+            style={styles.icon}
+          />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={handleShare} style={styles.actionButton}>
-          <Image source={require("../../assets/images/share.png")} style={styles.icon} />
+          <Image
+            source={require("../../assets/images/share.png")}
+            style={styles.icon}
+          />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={handleSave} style={styles.actionButton}>
           <Image
-            source={saved ? require("../../assets/images/saved.png") : require("../../assets/images/save.png")}
+            source={
+              saved
+                ? require("../../assets/images/saved.png")
+                : require("../../assets/images/save.png")
+            }
             style={styles.icon}
           />
         </TouchableOpacity>
@@ -132,6 +172,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#555",
     marginBottom: 2,
+  },
+  userInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+    marginBottom: 6,
+  },
+  profilePic: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    marginRight: 8,
   },
   username: {
     fontWeight: "bold",

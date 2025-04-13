@@ -19,7 +19,7 @@ import { getUser } from '../../services/api';
 
 const Profile = ({ navigation }) => {
   const user = useAuth();
-  const userId = 3; // Change to dynamic user?.uid if needed
+  const userId = '3'; // Change to dynamic user?.uid if needed
 
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
