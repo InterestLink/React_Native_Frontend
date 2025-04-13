@@ -1,75 +1,97 @@
-import React, { useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, RefreshControl } from "react-native";
+import { getPosts } from "../../services/api";
 import PostCard from "../sub_components/PostCard";
 
-export default function Home({ navigation }) {
-  const [selectedCommunity, setSelectedCommunity] = useState("All");
+const Home = () => {
+  const userId = 1; // Hardcoded user ID for testing
 
-  const posts = [
-    { community: "RapEnjoyers", id: "1", username: "ChiefKeefFan202", content: "Wake up, gotta thank the day, yeah, I’m blessed now", tags:["tag1", "chiefkeef","music"]},
-    { community: "Kony2012 Enthusiasts", id: "2", username: "user2", content: "#kony2012" },
-    { community: "Figma Enthusiasts", id: "3", username: "keenan", content: "I love figma!" },
-  ];
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const communities = ["All", ...new Set(posts.map(post => post.community))];
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const data = await getPosts({
+        id: userId,
+        isUser: true,
+      });
 
-  const filteredPosts = selectedCommunity === "All"
-    ? posts
-    : posts.filter(post => post.community === selectedCommunity);
+      if (Array.isArray(data)) {
+        setPosts(data);
+      } else if (Array.isArray(data.body)) {
+        setPosts(data.body);
+      } else {
+        console.warn("Unexpected post response format:", data);
+        setPosts([]);
+      }
+    } catch (error) {
+      console.error("Failed to fetch posts:", error.message || error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchPosts();
+  };
+
+  const renderItem = ({ item }) => (
+    <PostCard
+      id={item.post_id}
+      content={item.content}
+      image={item.image}
+      likeCount={item.likes} 
+      username={item.username} 
+      community={item.name}
+      tags={[]} // Empty array if tags aren't part of the payload
+    />
+  );
+  
 
   return (
     <View style={styles.container}>
-      {/* Scrollable Filter Options */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterContainer}>
-        {communities.map((community) => (
-          <TouchableOpacity
-            key={community}
-            style={[styles.filterButton, selectedCommunity === community && styles.selectedButton]}
-            onPress={() => setSelectedCommunity(community)}
-          >
-            <Text style={styles.filterText}>{community}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      {/* Post List */}
-      <FlatList
-        data={filteredPosts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <PostCard {...item} />}
-        contentContainerStyle={styles.postList}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#000" />
+      ) : posts.length === 0 ? (
+        <Text style={styles.emptyText}>No posts to show yet.</Text>
+      ) : (
+        <FlatList
+          data={posts}
+          keyExtractor={(item, index) => (item?.id ? item.id.toString() : index.toString())}
+          renderItem={renderItem}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          contentContainerStyle={styles.list}
+        />
+      )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#f8f8f8",
+    flex: 1,
+    padding: 10,
+    backgroundColor: "#f9f9f9",
   },
-  filterContainer: {
-    flexDirection: "row",
-    paddingVertical: 10 ,
-    paddingHorizontal: 5,
+  list: {
+    paddingBottom: 20,
   },
-  filterButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 20,
-    backgroundColor: "#ddd",
-    marginHorizontal: 5,
-    flexShrink: 1,
-    alignSelf: "flex-start"
-  },
-  selectedButton: {
-    backgroundColor: "#007bff",
-  },
-  filterText: {
-    color: "#000",
-    lineHeight: 18,
-    fontSize: 14,
-  },
-  postList: {
-    flexGrow: 1,
+  emptyText: {
+    textAlign: "center",
+    marginTop: 50,
+    fontSize: 16,
+    color: "#555",
   },
 });
+
+export default Home;

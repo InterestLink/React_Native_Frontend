@@ -1,4 +1,4 @@
-import { API_URL} from "@env";
+import { API_URL } from "@env"; // Import API_URL from environment
 
 // Shared utility for GET requests with query parameters
 const fetchWithParams = async (endpoint, parameters) => {
@@ -61,10 +61,28 @@ export const getCommunities = async (parameters) => {
 
 // parameters = { id: 123, isUser: true, userSaved: true, userLiked: false  } Returns communities or profile posts dependent on isUser, if isUser, check if userSaved or userLinked to return liked/saved posts or false on both for default. (id, username, content, image)
 export const getPosts = async (parameters) => {
-  return await fetchWithParams("getPosts", parameters);
+  const { id = 1 } = parameters;
+  const url = `${API_URL}/getPosts?id=${id}`;
+
+  console.log("📡 Fetching posts from:", url);
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    console.error("❌ HTTP status:", response.status);
+    throw new Error('Network response was not ok');
+  }
+
+  return await response.json();
 };
 
-export const getComments = async (parameters) =>{
+
+export const getComments = async (parameters) => {
   return await fetchWithParams("getComments", parameters);
 }
 

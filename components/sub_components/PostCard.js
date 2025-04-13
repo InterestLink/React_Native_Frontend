@@ -3,13 +3,23 @@ import {
   View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Share 
 } from "react-native";
 import { likePost, unlikePost, savePost, unSavePost, createComment, getComments } from "../../services/api";
-import { useAuth } from '../../services/firebase/useAuth'; // 🔥 Added to get current user UID
+import { useAuth } from '../../services/firebase/useAuth';
 
-const PostCard = ({ id, community, username, content, image, tags }) => {
-  const user = useAuth(); // 🔥 Get current user
+const PostCard = ({
+  id,
+  community,
+  username,
+  content,
+  image,
+  tags,
+  likeCount = 0,
+  likedByUser = false,
+}) => {
+  const user = useAuth();
   const userId = user?.uid || null;
-  const [likes, setLikes] = useState(0);
-  const [liked, setLiked] = useState(false);
+
+  const [likes, setLikes] = useState(likeCount);
+  const [liked, setLiked] = useState(likedByUser);
   const [saved, setSaved] = useState(false);
   const [comments, setComments] = useState([]);
 
@@ -29,17 +39,17 @@ const PostCard = ({ id, community, username, content, image, tags }) => {
   };
 
   const handleSave = async () => {
-      try {
-        if (saved) {
-          await unSavePost({ userId, postId: id });
-        } else {
-          await savePost({ userId, postId: id });
-        }
-        setSaved(!saved);
-      } catch (error) {
-        console.log("Save error:", error);
+    try {
+      if (saved) {
+        await unSavePost({ userId, postId: id });
+      } else {
+        await savePost({ userId, postId: id });
       }
-    };
+      setSaved(!saved);
+    } catch (error) {
+      console.log("Save error:", error);
+    }
+  };
 
   const handleShare = async () => {
     try {
@@ -63,17 +73,11 @@ const PostCard = ({ id, community, username, content, image, tags }) => {
 
   return (
     <View style={styles.postContainer}>
-      {/* Community Name */}
       <Text style={styles.community}>{community}</Text>
-
-      {/* Username */}
       <Text style={styles.username}>{username}</Text>
-
-      {/* Post Content */}
       <Text style={styles.content}>{content}</Text>
       {image && <Image source={{ uri: image }} style={styles.image} />}
 
-      {/* Tags */}
       {tags && tags.length > 0 && (
         <FlatList
           data={tags}
@@ -84,7 +88,6 @@ const PostCard = ({ id, community, username, content, image, tags }) => {
         />
       )}
 
-      {/* Action Buttons */}
       <View style={styles.actions}>
         <TouchableOpacity onPress={handleLike} style={styles.actionButton}>
           <Image
