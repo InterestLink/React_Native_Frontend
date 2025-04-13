@@ -34,7 +34,7 @@ export default function MakePost({ navigation }) {
 
     const payload = {
       user_id: user.uid,
-      username: user.username || 'Anonymous',
+      username: user.displayName || 'Anonymous',
       community_id: selectedCommunity?.id || null,
       community_name: selectedCommunity?.name || null,
       image: image || null,
