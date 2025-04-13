@@ -1,5 +1,6 @@
 // mainContainer.js
 import * as React from "react";
+import { TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -17,6 +18,7 @@ import Settings from "./screens/Settings";
 import Accessibility from "./screens/Accessibility";
 import Help from "./screens/Help";
 import Login from "./screens/Login";
+import MakePost from "./screens/MakePost";
 import Moderation from "./screens/Moderation";
 import ContentSettings from "./screens/ContentSettings";
 import About from "./screens/About";
@@ -56,6 +58,10 @@ function SearchStack() {
   );
 }
 
+function EmptyScreen() {
+  return null; // Placeholder for the "Add" tab
+}
+
 function CommunitiesStack() {
   return (
     <Stack.Navigator>
@@ -88,7 +94,7 @@ function MainTabs() {
   return (
     <Tab.Navigator
       initialRouteName={homeName}
-      screenOptions={({ route }) => ({
+      screenOptions={({ route, navigation }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           if (route.name === homeName) iconName = focused ? "home" : "home-outline";
@@ -99,12 +105,30 @@ function MainTabs() {
         },
         tabBarActiveTintColor: "tomato",
         tabBarInactiveTintColor: "gray",
-        tabBarStyle: { paddingBottom: 5, height: 80, paddingTop: 15 },
+        tabBarStyle: { paddingBottom: 5, height: 80, paddingTop: 15, position: 'relative' },
         headerShown: false,
       })}
     >
       <Tab.Screen name={homeName} component={HomeStack} />
       <Tab.Screen name={searchName} component={SearchStack} />
+      <Tab.Screen 
+        name="Add" 
+        component={EmptyScreen}
+        options={({ navigation, route }) => ({
+          tabBarButton: ({accessibilityState}) => (
+            <TouchableOpacity
+              style={{
+                top: -5,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => navigation.navigate('MakePost')}
+            >
+              <Ionicons name="add-circle-outline" size={48} color={accessibilityState?.selected ? "tomato" : "gray"} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
       <Tab.Screen name={communityName} component={CommunitiesStack} />
       <Tab.Screen name={profileName} component={ProfileStack} />
     </Tab.Navigator>
@@ -131,6 +155,7 @@ function MainContainerContent() {
         {user ? (
           <>
             <RootStack.Screen name="MainTabs" component={MainTabs} />
+            <RootStack.Screen name="MakePost" component={MakePost} />
             <RootStack.Screen name="CommunityPage" component={CommunityPage} />
             <RootStack.Screen name="UserProfile" component={Profile} />
             <RootStack.Screen name="DirectMessages" component={DirectMessages} />
