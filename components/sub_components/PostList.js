@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  ActivityIndicator,
-  RefreshControl,
-} from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, RefreshControl } from 'react-native';
 import { getPosts } from '../../services/api';
 import PostCard from './PostCard';
 
-const PostList = ({ id, isUser = false, navigation }) => {
+const PostList = ({ community_id }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -18,17 +11,13 @@ const PostList = ({ id, isUser = false, navigation }) => {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const data = await getPosts({
-        id,
-        isUser,
-      });
+      const data = await getPosts({ id: community_id, isUser: false });
 
-      // Handle either raw or wrapped response
-      const postsArray = Array.isArray(data)
-        ? data
-        : Array.isArray(data?.body)
-        ? data.body
-        : [];
+      // Log the API response to inspect the data structure
+      console.log(data);
+
+      // Assuming the API returns an array of posts directly or wrapped in a response
+      const postsArray = Array.isArray(data) ? data : Array.isArray(data?.body) ? data.body : [];
 
       setPosts(postsArray);
     } catch (error) {
@@ -42,7 +31,7 @@ const PostList = ({ id, isUser = false, navigation }) => {
 
   useEffect(() => {
     fetchPosts();
-  }, [id]);
+  }, [community_id]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -51,14 +40,14 @@ const PostList = ({ id, isUser = false, navigation }) => {
 
   const renderItem = ({ item }) => (
     <PostCard
-      id={item.post_id}
-      content={item.content}
-      image={item.image}
-      likeCount={item.likes}
-      username={item.username}
-      community={item.name}
-      profile_picture={item.profile_picture}
-      tags={[]} // Update if tags are returned later
+      id={item?.post_id} // Ensure post_id exists in the item
+      content={item?.content}
+      image={item?.image}
+      likeCount={item?.likes}
+      username={item?.username}
+      community={item?.name}
+      profile_picture={item?.profile_picture}
+      tags={item?.tags || []} // Ensure tags are handled if returned
     />
   );
 
@@ -73,7 +62,7 @@ const PostList = ({ id, isUser = false, navigation }) => {
   return (
     <FlatList
       data={posts}
-      keyExtractor={(item, index) => (item?.post_id ? item.post_id.toString() : index.toString())}
+      keyExtractor={(item) => item?.post_id ? item.post_id.toString() : item.id?.toString() || Math.random().toString()} // Ensure fallback key
       renderItem={renderItem}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       contentContainerStyle={styles.list}
