@@ -12,6 +12,26 @@ const fetchWithParams = async (endpoint, parameters) => {
   }
 };
 
+// Shared utility for POST requests with query parameters
+const postWithParams = async (endpoint, parameters) => {
+  try {
+    const response = await fetch(API_URL + endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Authorization': `Bearer ${API_KEY}` // Uncomment if needed
+      },
+      body: JSON.stringify(parameters),
+    });
+
+    const data = await response.json();
+    return data.body || JSON.parse(data.body); // Handle both direct and stringified JSON body
+  } catch (error) {
+    console.error(`Error in ${endpoint}:`, error);
+    throw error;
+  }
+};
+
 // SEARCH CALLS BELOW <------------------------------------------------------------------------>
 
 // Search posts by keywords
@@ -37,49 +57,12 @@ export const searchCommunities = async (parameters) => {
 
 // GET CALLS BELOW <------------------------------------------------------------------------>
 
-// parameters = { userId: 123, returnAll: true }
-// if returnAll return all of the user profile (displayName, username, userBio, numCommunities = 0, numFollowers, numFollowing)
+
 // parameters = { userId: 123, returnAll: true }
 // if returnAll is true, return all user profile data (displayName, username, userBio, numCommunities, numFollowers, numFollowing)
 export const getUser = async (parameters) => {
-  const { userId, returnAll } = parameters;
-
-  // Build the query string
-  const queryParams = new URLSearchParams();
-  queryParams.append("user_id", userId);
-  if (returnAll) {
-    queryParams.append("returnAll", returnAll);
-  }
-
-  // Construct the API URL for fetching user profile
-  const url = `${API_URL}getUser?${queryParams.toString()}`;
-
-  try {
-    console.log("📡 Fetching user profile from:", url);
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    // Handle non-OK responses
-    if (!response.ok) {
-      console.error("❌ HTTP status:", response.status);
-      throw new Error('Failed to fetch user data');
-    }
-
-    // Parse the response and return the data
-    const data = await response.json();
-    console.log("data.body = ", data);
-    return data; // Assuming the response has a `body` property
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-    throw error; // Rethrow the error to be handled by the caller
-  }
+  return await fetchWithParams("getUser", parameters)
 };
-
 
 // Get members of a community
 export const getCommunityMembers = async (communityId) => {
@@ -117,105 +100,25 @@ export const getComments = async (parameters) => {
 // POST CALLS BELOW <------------------------------------------------------------------------>
 
 // (userId, displayName, username, bio)
-export const updateUser = async (parameters) => {
-  const response = await fetch(API_URL + "createComment", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // 'Authorization': `Bearer ${API_KEY}` // Uncomment if needed
-    },
-    body: JSON.stringify(parameters),
-  });
-  const data = await response.json();
-  return data.body;
-};
-
-export const createComment = async (parameters) => {
-  const response = await fetch(API_URL + "createComment", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // 'Authorization': `Bearer ${API_KEY}` // Uncomment if needed
-    },
-    body: JSON.stringify(parameters),
-  });
-  const data = await response.json();
-  return data.body;
-};
+export const postUserUpdate = async (params) => postWithParams("postUserUpdate", params);
 
 // parameters = { userId: 123, communityId: 321, communityName: nameHere, username: nameHere, image: urlHere } 
-export const createPost = async (parameters) => {
-  const response = await fetch(API_URL + "createPost", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // 'Authorization': `Bearer ${API_KEY}` // Uncomment if needed
-    },
-    body: JSON.stringify(parameters),
-  });
-  const data = await response.json();
-  return data.body;
-};
+export const createComment = async (params) => postWithParams("createComment", params);
 
-// parameters (userId, username, displayName, profilePicture)
-export const postUser = async (parameters) => {
-  try {
-    const response = await fetch(API_URL + "postUser", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${API_KEY}` // Uncomment if needed
-      },
-      body: JSON.stringify(parameters),
-    });
+// parameters = { userId: 123, communityId: 321, communityName: nameHere, username: nameHere, image: urlHere } 
+export const createPost = async (params) => postWithParams("createPost", params);
 
-    const data = await response.json();
-    return JSON.parse(data.body);
-    
-  } catch (error) {
-    throw error;
-  }
-};
+// parameters = { userId, username, displayName, profilePicture }
+export const postUser = async (params) => postWithParams("postUser", params);
 
-// parameters (guestId)
-export const createGuestUser = async (parameters) => {
-  const response = await fetch(API_URL + "createUser", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // 'Authorization': `Bearer ${API_KEY}` // Uncomment if needed
-    },
-    body: JSON.stringify(parameters),
-  });
-  const data = await response.json();
-  return data.body;
-};
+// parameters = { guestId }
+export const createGuestUser = async (params) => postWithParams("createUser", params);
 
-// parameters (userId, postId)
-export const likePost = async (parameters) => {
-  const response = await fetch(API_URL + "likePost", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(parameters),
-  });
-  const data = await response.json();
-  return data.body;
-};
+// parameters = { userId, postId }
+export const likePost = async (params) => postWithParams("likePost", params);
 
-// parameters(userId, postId)
-export const savePost = async (parameters) => {
-  const response = await fetch(API_URL + "savePost", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(parameters),
-  });
-  const data = await response.json();
-  return data.body;
-};
+// parameters = { userId, postId }
+export const savePost = async (params) => postWithParams("savePost", params);
 
 // DELETE CALLS BELOW <------------------------------------------------------------------------>
 
