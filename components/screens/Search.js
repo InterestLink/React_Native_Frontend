@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, SafeAreaView, TextInput, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { searchPosts, searchUsers, searchCommunities } from '../../services/api';
+import { getSearchPost, getSearchUser, getSearchCommunity } from '../../services/api';
 
 export default function Search({ navigation }) {
     const [searchQuery, setSearchQuery] = useState(''); // State to store input data
     const [results, setResults] = useState([]); // State to store search results
     const [isLoading, setIsLoading] = useState(false); // State to manage loading state
     const [searchType, setSearchType] = useState('posts'); // State to manage search type (posts, users, communities)
-    
+
     // Debounce to limit API calls
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -27,14 +27,16 @@ export default function Search({ navigation }) {
             let data;
             switch (searchType) {
                 case 'users':
-                    data = await searchUsers(searchQuery); // Call API to search users
+                  console.warn(searchQuery)
+                    data = await getSearchUser({search : searchQuery}); // Call API to search users
                     break;
                 case 'communities':
-                    data = await searchCommunities(searchQuery); // Call API to search communities
+                    data = await getSearchCommunity({search : searchQuery}); // Call API to search communities
                     break;
                 default: //posts
-                    data = await searchPosts(searchQuery); // Call API to search posts
+                    data = await getSearchPost({search : searchQuery}); // Call API to search posts
             }
+            console.log('Search results:', data); // Log the search results
             setResults(data); // Update results state with fetched data
         } catch (error) {
             console.error("Search error:", error); // Log any errors
@@ -44,24 +46,29 @@ export default function Search({ navigation }) {
     };
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity style = {styles.resultItem} onPress={() => {
-            if (searchType === 'users') {
-                navigation.navigate("UserProfile", { userId: item.id }); // Navigate to UserProfile screen with user ID
-            } else if (searchType === 'communities') {
-                navigation.navigate("CommunityProfile", { communityId: item.id }); // Navigate to CommunityProfile screen with community ID
-            } else {
-                navigation.navigate("PostDetail", { postId: item.id }); // Navigate to PostDetail screen with post ID
-            }
+      <TouchableOpacity
+        style={styles.resultItem}
+        onPress={() => {
+          if (searchType === 'users') {
+            navigation.navigate('UserProfile', { userId: item.id });
+          } else if (searchType === 'communities') {
+            navigation.navigate('CommunityProfile', { communityId: item.id });
+          } else {
+            navigation.navigate('PostDetail', { postId: item.id });
+          }
         }}
-        >
-            <Text style={styles.resultTitle}>{item.name || item.title}</Text>
-            <Text style={styles.resultSubtext}>
-                ? '@${item.username}'
-                : searchType === 'communities'
-                ? '@${item.memberCount} members'
-                : '@${item.communityName}'
-            </Text>
-        </TouchableOpacity>
+      >
+        <Text style={styles.resultTitle}>
+          {searchType === 'users' ? item.name : item.title || item.name}
+        </Text>
+        <Text style={styles.resultSubtext}>
+          {searchType === 'users'
+            ? `@${item.username}`
+            : searchType === 'communities'
+            ? `${item.memberCount} members`
+            : `Posted in ${item.communityName}`}
+        </Text>
+      </TouchableOpacity>
     );
     return (
         <SafeAreaView style={styles.container}>
@@ -96,7 +103,11 @@ export default function Search({ navigation }) {
             <FlatList
               data={results}
               renderItem={renderItem}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item) => {
+                if (searchType === 'users') return item.user_id;
+                if (searchType === 'communities') return item.id?.toString(); // or item.community_id
+                return item.id?.toString(); // posts
+              }}              
               contentContainerStyle={styles.resultsContainer}
             />
           ) : (

@@ -42,22 +42,22 @@ const postWithParams = async (endpoint, parameters) => {
 // Search posts by keywords
 // parameters {String} query - search term
 // returns = Array<{user_id: number, community_id: number, community_name: string, username: string, image: string}>
-export const searchPosts = async (parameters) => {
-  return await fetchWithParams('searchPosts', { parameters });
+export const getSearchPost = async (parameters) => {
+  return await fetchWithParams('getSearchPost', parameters);
 };
 
 // Search users by username/displayName
 // parameters {String} query - search term
 // returns = Array<{user_id: number, username: string, display_name: string}>
-export const searchUsers = async (parameters) => {
-  return await fetchWithParams('searchUsers', { parameters });
+export const getSearchUser = async (parameters) => {
+  return await fetchWithParams('getSearchUser', parameters);
 };
 
 // Search communities by name/description
 // parameters {String} query - search term
 // returns = Array<{community_id: number, name: string, description: string, memberCount: number}>
-export const searchCommunities = async (parameters) => {
-  return await fetchWithParams('searchCommunities', { parameters });
+export const getSearchCommunity = async (parameters) => {
+  return await fetchWithParams('getSearchCommunity', parameters);
 };
 
 // GET CALLS BELOW <------------------------------------------------------------------------>
