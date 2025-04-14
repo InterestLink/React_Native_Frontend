@@ -1,21 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, ScrollView, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CommunityCard from './CommunityCard';
 import { getUserCommunities } from '../../services/api.js';
-import { useAuth } from '../../services/firebase/useAuth.js';
 
-export default function CommunityList({ userId }) { // Destructure userId from props
+const styles = StyleSheet.create({
+  pageContainer: {
+    flex: 1,
+  },
+  content: {
+    flexWrap: 'column',
+    paddingVertical: 10,
+    flexGrow: 1,
+  },
+});
+
+
+export default function CommunityList({ userId }) {
   const navigation = useNavigation();
   const [communities, setCommunities] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Just for dev testing fallback
+  const idToUse = userId || 1;
+
   useEffect(() => {
     const fetchCommunities = async () => {
       try {
-        // Pass the userId to getCommunities
-        const data = await getUserCommunities({ userId });
-        setCommunities(data);
+        const data = await getUserCommunities({ user_id: idToUse });
+        console.log('Fetched data:', data);
+        const list = Array.isArray(data) ? data : data.communities || [];
+        setCommunities(list);
       } catch (error) {
         console.error('Failed to load communities:', error);
       } finally {
@@ -23,17 +38,34 @@ export default function CommunityList({ userId }) { // Destructure userId from p
       }
     };
 
-    // Only fetch communities if userId is available
-    if (userId) {
-      console.log('running fetch communities...');
+    if (idToUse) {
+      console.log('Fetching communities for user:', idToUse);
       fetchCommunities();
     }
-  }, [userId]);
+  }, [idToUse]);
 
   if (loading) {
     return (
       <View style={[styles.pageContainer, { justifyContent: 'center', alignItems: 'center' }]}>
         <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (!Array.isArray(communities)) {
+    return (
+      <View style={styles.pageContainer}>
+        <Text style={{ color: 'red' }}>Invalid data format</Text>
+      </View>
+    );
+  }
+
+  if (communities.length === 0) {
+    return (
+      <View style={styles.pageContainer}>
+        <Text style={{ color: '#777', fontStyle: 'italic' }}>
+          You're not in any communities yet.
+        </Text>
       </View>
     );
   }
@@ -46,9 +78,9 @@ export default function CommunityList({ userId }) { // Destructure userId from p
       >
         {communities.map((community) => (
           <CommunityCard 
-            key={community.id} 
+            key={community.community_id} 
             name={community.name} 
-            icon={community.icon} 
+            icon={community.community_picture} 
             onPress={() => navigation.navigate('CommunityPage', { community })}
           />
         ))}
@@ -57,13 +89,3 @@ export default function CommunityList({ userId }) { // Destructure userId from p
   );
 }
 
-const styles = StyleSheet.create({
-  pageContainer: {
-    flex: 1,
-  },
-  content: {
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    flexGrow: 1,
-  },
-});
