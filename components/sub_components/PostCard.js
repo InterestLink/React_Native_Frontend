@@ -9,10 +9,8 @@ import {
   Share,
 } from "react-native";
 import {
-  likePost,
-  unlikePost,
+  postLikePost,
   savePost,
-  unSavePost,
   getComments,
 } from "../../services/api";
 import { useAuth } from "../../services/firebase/useAuth";
@@ -38,13 +36,8 @@ const PostCard = ({
 
   const handleLike = async () => {
     try {
-      if (liked) {
-        await unlikePost({ userId, postId: id });
-        setLikes(likes - 1);
-      } else {
-        await likePost({ userId, postId: id });
-        setLikes(likes + 1);
-      }
+      await postLikePost({ user_id: userId, post_id: id, like: !liked });
+      setLikes(liked ? likes - 1 : likes + 1);
       setLiked(!liked);
     } catch (error) {
       console.log("Like error:", error);
@@ -53,11 +46,7 @@ const PostCard = ({
 
   const handleSave = async () => {
     try {
-      if (saved) {
-        await unSavePost({ userId, postId: id });
-      } else {
-        await savePost({ userId, postId: id });
-      }
+      await savePost({ user_id: userId, post_id: id, save: !saved });
       setSaved(!saved);
     } catch (error) {
       console.log("Save error:", error);
@@ -104,7 +93,7 @@ const PostCard = ({
       <Text style={styles.content}>{content}</Text>
       {image && <Image source={{ uri: image }} style={styles.image} />}
 
-      {tags && tags.length > 0 && (
+      {tags?.length > 0 && (
         <FlatList
           data={tags}
           horizontal

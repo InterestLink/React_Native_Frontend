@@ -119,7 +119,7 @@ export const postUser = async (params) => postWithParams("postUser", params);
 export const createGuestUser = async (params) => postWithParams("createUser", params);
 
 // parameters = { user_id, post_id, like } true = add, false = remove
-export const postLikePost = async (params) => postWithParams("likePost", params);
+export const postLikePost = async (params) => postWithParams("postLikePost", params);
 
 // parameters = { user_id, post_id, save } true = add, false = remove
 export const savePost = async (params) => postWithParams("savePost", params);
