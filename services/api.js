@@ -65,7 +65,7 @@ export const getUser = async (parameters) => {
 };
 
 // Get users in a community
-export const getCommunityUsers = async (communityId) => {
+export const getCommunityMembers = async (communityId) => {
   return await fetchWithParams("getProfileLists", { id: communityId });
 };
 
