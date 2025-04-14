@@ -2,18 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CommunityCard from './CommunityCard';
-import { getCommunities } from '../../services/api.js';
-
-const styles = StyleSheet.create({
-  pageContainer: {
-    flex: 1,
-  },
-  content: {
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    flexGrow: 1,
-  },
-});
+import { getUserCommunities } from '../../services/api.js';
+import { useAuth } from '../../services/firebase/useAuth.js';
 
 export default function CommunityList({ userId }) { // Destructure userId from props
   const navigation = useNavigation();
@@ -24,7 +14,7 @@ export default function CommunityList({ userId }) { // Destructure userId from p
     const fetchCommunities = async () => {
       try {
         // Pass the userId to getCommunities
-        const data = await getCommunities({ userId });
+        const data = await getUserCommunities({ userId });
         setCommunities(data);
       } catch (error) {
         console.error('Failed to load communities:', error);
@@ -35,6 +25,7 @@ export default function CommunityList({ userId }) { // Destructure userId from p
 
     // Only fetch communities if userId is available
     if (userId) {
+      console.log('running fetch communities...');
       fetchCommunities();
     }
   }, [userId]);
@@ -65,3 +56,14 @@ export default function CommunityList({ userId }) { // Destructure userId from p
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  pageContainer: {
+    flex: 1,
+  },
+  content: {
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    flexGrow: 1,
+  },
+});

@@ -80,8 +80,8 @@ export const getUserFollowing = async (userId) => {
 };
 
 // parameters = { userId: 123 } Returns list of communities that specified user is in (id, name, picture)
-export const getCommunities = async (parameters) => {
-  return await fetchWithParams("getCommunities", parameters);
+export const getUserCommunities = async (parameters) => {
+  return await fetchWithParams("getUserCommunities", parameters);
 };
 // parameters = { id: 123, isUser: true} Returns communities or profile posts dependent on isUser, if isUser, check if userSaved or userLinked to return liked/saved posts or false on both for default. (id, username, content, image)
 export const getPosts = async (parameters) => {
