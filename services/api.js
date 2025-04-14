@@ -40,21 +40,21 @@ const postWithParams = async (endpoint, parameters) => {
 
 // Search posts by keywords
 // parameters {String} query - search term
-// returns = Array<{userId: number, communityId: number, communityName: string, username: string, image: string}>
+// returns = Array<{user_id: number, community_id: number, community_name: string, username: string, image: string}>
 export const searchPosts = async (parameters) => {
   return await fetchWithParams('searchPosts', { parameters });
 };
 
 // Search users by username/displayName
 // parameters {String} query - search term
-// returns = Array<{userId: number, username: string, displayName: string}>
+// returns = Array<{user_id: number, username: string, display_name: string}>
 export const searchUsers = async (parameters) => {
   return await fetchWithParams('searchUsers', { parameters });
 };
 
 // Search communities by name/description
 // parameters {String} query - search term
-// returns = Array<{id: number, name: string, description: string, memberCount: number}>
+// returns = Array<{community_id: number, name: string, description: string, memberCount: number}>
 export const searchCommunities = async (parameters) => {
   return await fetchWithParams('searchCommunities', { parameters });
 };
@@ -62,8 +62,8 @@ export const searchCommunities = async (parameters) => {
 // GET CALLS BELOW <------------------------------------------------------------------------>
 
 
-// parameters = { userId: 123, returnAll: true }
-// if returnAll is true, return all user profile data (displayName, username, userBio, numCommunities, numFollowers, numFollowing)
+// parameters = { user_id: 123 }
+// if returnAll is true, return all user profile data (display_name, username, user_bio, num_communities, num_followers, num_following)
 export const getUser = async (parameters) => {
   return await fetchWithParams("getUser", parameters)
 };
@@ -83,16 +83,16 @@ export const getUserFollowing = async (userId) => {
   return await fetchWithParams("getUserFollowing", { id: userId });
 };
 
-// parameters = { userId: 123 } Returns list of communities that specified user is in (id, name, picture)
+// parameters = { user_id: 123 } Returns list of communities that specified user is in (id, name, picture)
 export const getUserCommunities = async (parameters) => {
   return await fetchWithParams("getUserCommunities", parameters);
 };
-// parameters = { id: 123, isUser: true} Returns communities or profile posts dependent on isUser, if isUser, check if userSaved or userLinked to return liked/saved posts or false on both for default. (id, username, content, image)
+// parameters = { post_id: 123, is_user: true} Returns communities or profile posts dependent on isUser, if isUser, check if userSaved or userLinked to return liked/saved posts or false on both for default. (id, username, content, image)
 export const getPosts = async (parameters) => {
   return await fetchWithParams("getPosts", parameters);
 };
 
-// parameters = { id: 123, isUser: true, userSaved: true, userLiked: false  } Returns communities or profile posts dependent on isUser, if isUser, check if userSaved or userLinked to return liked/saved posts or false on both for default. (id, username, content, image)
+// parameters = { post_id: 123, is_user: true, user_saved: true, user_liked: false  } Returns communities or profile posts dependent on isUser, if isUser, check if userSaved or userLinked to return liked/saved posts or false on both for default. (id, username, content, image)
 export const getHomepage = async (parameters) => {
   return await fetchWithParams("getHomepage", parameters)
 };
@@ -103,23 +103,29 @@ export const getComments = async (parameters) => {
 
 // POST CALLS BELOW <------------------------------------------------------------------------>
 
-// (userId, displayName, username, bio)
+// (user_id, display_name, username, bio)
 export const postUpdateUser = async (params) => postWithParams("postUpdateUser", params);
 
-// parameters = { userId: 123, communityId: 321, communityName: nameHere, username: nameHere, image: urlHere } 
+// parameters = { user_id: 123, community_id: 321, community_name: name_here, username: name_here, image: url_here } 
 export const createComment = async (params) => postWithParams("createComment", params);
 
-// parameters = { userId: 123, communityId: 321, communityName: nameHere, username: nameHere, image: urlHere } 
+// parameters = { user_id: 123, community_id: 321, community_name: name_Here, username: name_here, image: url_here } 
 export const createPost = async (params) => postWithParams("createPost", params);
 
-// parameters = { userId, username, displayName, profilePicture }
+// parameters = { user_id, username, display_name, profile_picture }
 export const postUser = async (params) => postWithParams("postUser", params);
 
-// parameters = { guestId }
+// parameters = { guest_id }
 export const createGuestUser = async (params) => postWithParams("createUser", params);
 
-// parameters = { userId, postId, like } true = add, false = remove
+// parameters = { user_id, post_id, like } true = add, false = remove
 export const postLikePost = async (params) => postWithParams("likePost", params);
 
-// parameters = { userId, postId } true = add, false = remove
+// parameters = { user_id, post_id, save } true = add, false = remove
 export const savePost = async (params) => postWithParams("savePost", params);
+
+// parameters = { follower_id, following_id, follow } true = add, false = remove
+export const postFollowUser = async (params) => postWithParams("followUser", params);
+
+// parameters = { user_id, community_id, join } true = add, false = remove
+export const postJoinCommunity = async (params) => postWithParams("joinCommunity", params);
