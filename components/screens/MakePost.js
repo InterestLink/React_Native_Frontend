@@ -8,17 +8,21 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  Modal
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons'; // Make sure to install if not already
-import { createPost } from '../../services/api';
-import { getAuth } from 'firebase/auth';
+import { Ionicons } from '@expo/vector-icons';
+import { postCreatePost } from '../../services/api';
+import { useAuth } from "../../services/firebase/useAuth";
+import SelectCommunity from '../sub_components/SelectCommunity'; // updated import
 
 export default function MakePost({ navigation }) {
+  const { user } = useAuth();
   const [content, setContent] = useState('');
-  const [image, setImage] = useState(null); // Placeholder for image picker later
+  const [image, setImage] = useState(null);
   const [selectedCommunity, setSelectedCommunity] = useState(null);
   const [isPosting, setIsPosting] = useState(false);
+  const [showCommunityModal, setShowCommunityModal] = useState(false);
 
   const handlePost = async () => {
     if (!content.trim()) {
@@ -26,7 +30,6 @@ export default function MakePost({ navigation }) {
       return;
     }
 
-    const user = getAuth().currentUser;
     if (!user) {
       Alert.alert('You must be logged in to post');
       return;
@@ -34,28 +37,37 @@ export default function MakePost({ navigation }) {
 
     const payload = {
       user_id: user.uid,
-      username: user.displayName || 'Anonymous',
-      community_id: selectedCommunity?.id || null,
-      community_name: selectedCommunity?.name || null,
+      community_id: selectedCommunity?.id || 1,
       image: image || null,
       content: content.trim(),
     };
 
     try {
       setIsPosting(true);
-      await createPost(payload);
-      navigation.goBack();
+      console.log('Payload: ',payload);
+      const response = await postCreatePost(payload);
+
+      if (response) {
+        navigation.goBack();
+        if (navigation.getState().routes.some(r => r.name === 'Home')) {
+          navigation.navigate('Home', { refresh: true });
+        }
+      }
     } catch (err) {
       console.error('Error creating post:', err);
-      Alert.alert('Error creating post');
+      Alert.alert('Error', err.message || 'Failed to create post');
     } finally {
       setIsPosting(false);
     }
   };
 
-  // Fallback icon component if image doesn't load
   const renderCommunityIcon = () => {
-    return (
+    return selectedCommunity?.community_picture ? (
+      <Image 
+        source={{ uri: selectedCommunity.community_picture }} 
+        style={styles.communityImage} 
+      />
+    ) : (
       <View style={styles.communityIconFallback}>
         <Ionicons name="people" size={24} color="white" />
       </View>
@@ -64,7 +76,6 @@ export default function MakePost({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.cancel}>Cancel</Text>
@@ -79,16 +90,9 @@ export default function MakePost({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* Community Selector */}
       <TouchableOpacity
         style={styles.communitySelector}
-        onPress={() => {
-          setSelectedCommunity({
-            id: '1',
-            name: 'InterestLink Rules',
-            description: 'A place for people that love the app',
-          });
-        }}
+        onPress={() => setShowCommunityModal(true)}
       >
         {selectedCommunity ? (
           <View style={styles.communityCard}>
@@ -96,7 +100,7 @@ export default function MakePost({ navigation }) {
             <View>
               <Text style={styles.communityName}>{selectedCommunity.name}</Text>
               <Text style={styles.communityDesc} numberOfLines={1}>
-                {selectedCommunity.description}
+                {selectedCommunity.description || 'Community'}
               </Text>
             </View>
           </View>
@@ -107,7 +111,6 @@ export default function MakePost({ navigation }) {
         )}
       </TouchableOpacity>
 
-      {/* Text input */}
       <TextInput
         style={styles.textInput}
         placeholder="What's on your mind?"
@@ -116,7 +119,6 @@ export default function MakePost({ navigation }) {
         onChangeText={setContent}
       />
 
-      {/* Image preview */}
       {image && (
         <Image 
           source={{ uri: image }} 
@@ -124,6 +126,30 @@ export default function MakePost({ navigation }) {
           resizeMode="cover"
         />
       )}
+
+      <Modal
+        visible={showCommunityModal}
+        animationType="slide"
+        onRequestClose={() => setShowCommunityModal(false)}
+      >
+        <SafeAreaView style={styles.modalContainer}>
+          <View style={styles.modalHeader}>
+            <TouchableOpacity onPress={() => setShowCommunityModal(false)}>
+              <Ionicons name="close" size={24} color="#007AFF" />
+            </TouchableOpacity>
+            <Text style={styles.modalTitle}>Select Community</Text>
+            <View style={{ width: 24 }} />
+          </View>
+
+          <SelectCommunity
+            userId={user?.uid}
+            onCommunitySelect={(community) => {
+              setSelectedCommunity(community);
+              setShowCommunityModal(false);
+            }}
+          />
+        </SafeAreaView>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -176,6 +202,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 10,
   },
+  communityImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
   communityName: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -194,5 +226,21 @@ const styles = StyleSheet.create({
     margin: 15,
     height: 200,
     borderRadius: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15,
+    borderBottomColor: '#eee',
+    borderBottomWidth: 1,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

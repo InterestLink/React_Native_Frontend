@@ -7,7 +7,8 @@ import PostList from "../sub_components/PostList";
 // dummy screens for posts and members
 const PostsScreen = ({ community_id }) => (
   <View style={styles.tabContent}>
-    <PostList community_id={community_id} />
+    {/* Passing community_id to PostList and setting isUser to false */}
+    <PostList community_id={community_id} isUser={false} />
   </View>
 );
 
@@ -22,6 +23,7 @@ const Tab = createMaterialTopTabNavigator();
 export default function CommunityPage({ route }) {
   const { community } = route.params;
   const community_id = community.community_id;
+
   return (
     <View style={styles.container}>
       {/* Community Header */}

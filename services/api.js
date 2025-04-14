@@ -110,8 +110,8 @@ export const postUpdateUser = async (params) => postWithParams("postUpdateUser",
 // parameters = { user_id: 123, community_id: 321, community_name: name_here, username: name_here, image: url_here } 
 export const createComment = async (params) => postWithParams("createComment", params);
 
-// parameters = { user_id: 123, community_id: 321, community_name: name_Here, username: name_here, image: url_here } 
-export const createPost = async (params) => postWithParams("createPost", params);
+// parameters = { user_id: 123, community_id: 321, content, image: url_here } 
+export const postCreatePost = async (params) => postWithParams("postCreatePost", params);
 
 // parameters = { user_id, username, display_name, profile_picture }
 export const postUser = async (params) => postWithParams("postUser", params);
