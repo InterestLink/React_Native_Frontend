@@ -35,6 +35,7 @@ export default function Search({ navigation }) {
                     break;
                 default: //posts
                     data = await getSearchPost({search : searchQuery}); // Call API to search posts
+                    console.warn(data)
             }
             console.log('Search results:', data); // Log the search results
             setResults(data); // Update results state with fetched data
@@ -50,12 +51,26 @@ export default function Search({ navigation }) {
         style={styles.resultItem}
         onPress={() => {
           if (searchType === 'users') {
-            navigation.navigate('UserProfile', { userId: item.id });
+            const profileData = {
+              user_id: item.user_id || item.id,
+              display_name: item.display_name || item.name || "Unnamed",
+              icon: item.profile_picture || null,
+              username: item.username || "Anonymous",
+              bio: item.bio || "",
+              followers: item.followers || 0,
+              following: item.following || 0,
+              communities: item.communities || 0,
+            };
+            navigation.navigate('UserProfile', { profileData });
           } else if (searchType === 'communities') {
-            navigation.navigate('CommunityProfile', { communityId: item.id });
-          } else {
-            navigation.navigate('PostDetail', { postId: item.id });
-          }
+            
+            const communityData = {
+              community_id: item.community_id || item.id,
+              name: item.name || "Unnamed Community",
+              icon: item.community_picture || null,
+            };
+            navigation.navigate('CommunityPage', { community: communityData });
+          } 
         }}
       >
         {searchType === 'users' && (
