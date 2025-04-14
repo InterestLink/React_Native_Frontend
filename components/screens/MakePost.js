@@ -11,13 +11,13 @@ import {
   Modal
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons'; // Make sure to install if not already
+import { Ionicons } from '@expo/vector-icons';
 import { postCreatePost } from '../../services/api';
 import { useAuth } from "../../services/firebase/useAuth";
-import CommunityList from '../sub_components/CommunityList';
+import SelectCommunity from '../sub_components/SelectCommunity'; // updated import
 
 export default function MakePost({ navigation }) {
-  const {user} = useAuth();
+  const { user } = useAuth();
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [selectedCommunity, setSelectedCommunity] = useState(null);
@@ -44,11 +44,11 @@ export default function MakePost({ navigation }) {
 
     try {
       setIsPosting(true);
+      console.log('Payload: ',payload);
       const response = await postCreatePost(payload);
-      
+
       if (response) {
         navigation.goBack();
-        // Optionally trigger a refresh in parent component
         if (navigation.getState().routes.some(r => r.name === 'Home')) {
           navigation.navigate('Home', { refresh: true });
         }
@@ -76,7 +76,6 @@ export default function MakePost({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.cancel}>Cancel</Text>
@@ -91,7 +90,6 @@ export default function MakePost({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* Community Selector */}
       <TouchableOpacity
         style={styles.communitySelector}
         onPress={() => setShowCommunityModal(true)}
@@ -113,7 +111,6 @@ export default function MakePost({ navigation }) {
         )}
       </TouchableOpacity>
 
-      {/* Text input */}
       <TextInput
         style={styles.textInput}
         placeholder="What's on your mind?"
@@ -122,7 +119,6 @@ export default function MakePost({ navigation }) {
         onChangeText={setContent}
       />
 
-      {/* Image preview */}
       {image && (
         <Image 
           source={{ uri: image }} 
@@ -131,7 +127,6 @@ export default function MakePost({ navigation }) {
         />
       )}
 
-      {/* Community Selection Modal */}
       <Modal
         visible={showCommunityModal}
         animationType="slide"
@@ -145,8 +140,8 @@ export default function MakePost({ navigation }) {
             <Text style={styles.modalTitle}>Select Community</Text>
             <View style={{ width: 24 }} />
           </View>
-          
-          <CommunityList 
+
+          <SelectCommunity
             userId={user?.uid}
             onCommunitySelect={(community) => {
               setSelectedCommunity(community);
