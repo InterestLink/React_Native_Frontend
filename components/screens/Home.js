@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, RefreshControl } from "react-native";
 import { getHomepage } from "../../services/api";
 import PostCard from "../sub_components/PostCard";
+import auth, { useAuth } from "../../services/firebase/useAuth"
 
 const Home = () => {
-
+  const {user} = useAuth()
+  const userId = user?.uid || null
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -13,7 +15,7 @@ const Home = () => {
     try {
       setLoading(true);
       const data = await getHomepage({
-        isUser: true,
+        user_id: userId
       });
 
       if (Array.isArray(data)) {
