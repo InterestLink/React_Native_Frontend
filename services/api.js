@@ -25,7 +25,11 @@ const postWithParams = async (endpoint, parameters) => {
     });
 
     const data = await response.json();
-    return data.body || JSON.parse(data.body); // Handle both direct and stringified JSON body
+
+    if (typeof data.body === 'string') {
+      return JSON.parse(data.body);
+    }
+    return data.body;
   } catch (error) {
     console.error(`Error in ${endpoint}:`, error);
     throw error;
@@ -66,17 +70,17 @@ export const getUser = async (parameters) => {
 
 // Get members of a community
 export const getCommunityMembers = async (communityId) => {
-  return await fetchWithParams("getProfileLists", { id: communityId });
+  return await fetchWithParams("getCommunityMembers", { id: communityId });
 };
 
 // Get followers of a user
 export const getUserFollowers = async (userId) => {
-  return await fetchWithParams("getProfileLists", { id: userId });
+  return await fetchWithParams("getUserFollowers", { id: userId });
 };
 
 // Get users the user is following
 export const getUserFollowing = async (userId) => {
-  return await fetchWithParams("getProfileLists", { id: userId });
+  return await fetchWithParams("getUserFollowing", { id: userId });
 };
 
 // parameters = { userId: 123 } Returns list of communities that specified user is in (id, name, picture)
@@ -100,7 +104,7 @@ export const getComments = async (parameters) => {
 // POST CALLS BELOW <------------------------------------------------------------------------>
 
 // (userId, displayName, username, bio)
-export const postUserUpdate = async (params) => postWithParams("postUserUpdate", params);
+export const postUpdateUser = async (params) => postWithParams("postUpdateUser", params);
 
 // parameters = { userId: 123, communityId: 321, communityName: nameHere, username: nameHere, image: urlHere } 
 export const createComment = async (params) => postWithParams("createComment", params);
@@ -114,26 +118,14 @@ export const postUser = async (params) => postWithParams("postUser", params);
 // parameters = { guestId }
 export const createGuestUser = async (params) => postWithParams("createUser", params);
 
-// parameters = { userId, postId }
-export const likePost = async (params) => postWithParams("likePost", params);
+// parameters = { userId, postId, like } true = add, false = remove
+export const postLikePost = async (params) => postWithParams("likePost", params);
 
 // parameters = { userId, postId }
 export const savePost = async (params) => postWithParams("savePost", params);
 
 // DELETE CALLS BELOW <------------------------------------------------------------------------>
 
-// parameters(userId, postId)
-export const unlikePost = async (parameters) => {
-  const response = await fetch(API_URL + "likePost", {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(parameters),
-  });
-  const data = await response.json();
-  return data.body;
-};
 
 // parameters(userId, postId)
 export const unSavePost = async (parameters) => {
