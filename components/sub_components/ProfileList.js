@@ -68,7 +68,7 @@ export default function ProfileList({ community_id }) {
             following: profile.following || 0,
             communities: profile.communities || 0,
           };
-
+          
           return (
             <ProfileCard
               key={profile.user_id}

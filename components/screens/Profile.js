@@ -19,7 +19,7 @@ import { getUser } from "../../services/api";
 
 const Profile = ({ route, navigation }) => {
   const { user } = useAuth();
-  const data = route?.params?.profileData;
+  const routeData = route?.params?.profileData;
 
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,29 +28,28 @@ const Profile = ({ route, navigation }) => {
 
   const isFocused = useIsFocused();
 
-  // Determine the user ID from either `data` or `user`
-  const userId = data?.user_id || user?.uid;
+  const userId = routeData?.user_id || user?.uid;
   const isOwnProfile = user?.uid === userId;
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         if (!userId) return;
         setLoading(true);
 
-        if (data) {
-          // If data was passed in, use it directly
-          setProfileData(data);
+        // Always fetch full profile data from backend
+        const fetchedData = await getUser({
+          user_id: userId,
+          returnAll: true,
+        });
+
+        if (fetchedData) {
+          setProfileData(fetchedData);
+        } else if (routeData) {
+          // fallback if API returns nothing
+          setProfileData(routeData);
         } else {
-          // Otherwise, fetch it based on user ID
-          const fetchedData = await getUser({
-            user_id: userId,
-            returnAll: true,
-          });
-          if (fetchedData) {
-            setProfileData(fetchedData);
-          } else {
-            console.error("Profile data is missing or malformed:", fetchedData);
-          }
+          console.warn("No valid profile data available");
         }
       } catch (error) {
         console.error("Failed to load profile:", error);
@@ -72,9 +71,7 @@ const Profile = ({ route, navigation }) => {
   const handleShare = async () => {
     try {
       await Share.share({
-        message: `Check out ${
-          profileData?.display_name || profileData?.username
-        }'s profile (@${profileData?.username}) on our app!`,
+        message: `Check out ${profileData?.display_name || profileData?.username}'s profile (@${profileData?.username}) on our app!`,
       });
     } catch (error) {
       console.error("Error sharing:", error);
