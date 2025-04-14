@@ -121,21 +121,5 @@ export const createGuestUser = async (params) => postWithParams("createUser", pa
 // parameters = { userId, postId, like } true = add, false = remove
 export const postLikePost = async (params) => postWithParams("likePost", params);
 
-// parameters = { userId, postId }
+// parameters = { userId, postId } true = add, false = remove
 export const savePost = async (params) => postWithParams("savePost", params);
-
-// DELETE CALLS BELOW <------------------------------------------------------------------------>
-
-
-// parameters(userId, postId)
-export const unSavePost = async (parameters) => {
-  const response = await fetch(API_URL + "savePost", {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(parameters),
-  });
-  const data = await response.json();
-  return data.body;
-};
