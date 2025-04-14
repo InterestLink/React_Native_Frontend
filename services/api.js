@@ -25,6 +25,7 @@ const postWithParams = async (endpoint, parameters) => {
     });
 
     const data = await response.json();
+    console.log('API Response:', data);  // Log the full response object
 
     if (typeof data.body === 'string') {
       return JSON.parse(data.body);

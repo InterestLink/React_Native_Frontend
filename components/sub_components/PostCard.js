@@ -26,17 +26,17 @@ const PostCard = ({
   likedByUser = false,
   profile_picture = null, 
 }) => {
-  const user = useAuth();
+  const { user } = useAuth();
   const userId = user?.uid || null;
 
   const [likes, setLikes] = useState(likeCount);
   const [liked, setLiked] = useState(likedByUser);
   const [saved, setSaved] = useState(false);
   const [comments, setComments] = useState([]);
-
+  
   const handleLike = async () => {
     try {
-      await postLikePost({ user_id: userId, post_id: id, like: !liked });
+      const returnVal = await postLikePost({ user_id: userId, post_id: id, like: !liked });
       setLikes(liked ? likes - 1 : likes + 1);
       setLiked(!liked);
     } catch (error) {
@@ -51,7 +51,7 @@ const PostCard = ({
     } catch (error) {
       console.log("Save error:", error);
     }
-  };
+  }
 
   const handleShare = async () => {
     try {
