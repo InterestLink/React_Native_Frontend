@@ -49,6 +49,8 @@ const Home = () => {
       content={item.content}
       image={item.image}
       likeCount={item.likes} 
+      liked_by_user={item.liked_by_user}
+      saved_by_user={item.saved_by_user}
       username={item.username} 
       community={item.name}
       profile_picture={item.profile_picture}
