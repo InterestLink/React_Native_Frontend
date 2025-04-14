@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useIsFocused } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -18,6 +19,7 @@ import { useAuth } from '../../services/firebase/useAuth';
 import { getUser } from '../../services/api';
 
 const Profile = ({ navigation }) => {
+  console.warn("here again")
   const user = useAuth();
   const userId = 'asd123'; // Change to dynamic user?.uid if needed
 
@@ -26,14 +28,16 @@ const Profile = ({ navigation }) => {
   const [selectedView, setSelectedView] = useState('Posts');
   const [isBioExpanded, setIsBioExpanded] = useState(false);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         if (!userId) return;
-
-        const data = await getUser({ userId, returnAll: true });
+        setLoading(true);
+        const data = await getUser({ user_id: userId, returnAll: true });
         if (data) {
-          setProfileData(data); // No .body
+          setProfileData(data);
         } else {
           console.error('Profile data is missing or malformed:', data);
         }
@@ -44,8 +48,17 @@ const Profile = ({ navigation }) => {
       }
     };
 
-    fetchProfile();
-  }, [userId]);
+    if (isFocused) {
+      fetchProfile();
+    }
+
+    // Cleanup when navigating away from this screen
+    return () => {
+      setProfileData(null); // Clear data when leaving
+      setLoading(true); // Reset loading state for future use
+    };
+
+  }, [isFocused, userId]);
 
   const handleShare = async () => {
     try {
@@ -56,9 +69,6 @@ const Profile = ({ navigation }) => {
       console.error('Error sharing:', error);
     }
   };
-
-  const handleEdit = () => navigation.navigate('EditProfile');
-  const handleSettings = () => navigation.navigate('Settings');
 
   const renderContent = () => {
     switch (selectedView) {
@@ -99,6 +109,9 @@ const Profile = ({ navigation }) => {
     followerCount = 0,
     followingCount = 0,
   } = profileData;
+
+  const handleEdit = () => navigation.navigate('EditProfile', { profileData });
+  const handleSettings = () => navigation.navigate('Settings');
 
   return (
     <SafeAreaView style={styles.container}>
