@@ -43,21 +43,21 @@ const postWithParams = async (endpoint, parameters) => {
 // parameters {String} query - search term
 // returns = Array<{user_id: number, community_id: number, community_name: string, username: string, image: string}>
 export const searchPosts = async (parameters) => {
-  return await fetchWithParams('searchPosts', { parameters });
+  return await fetchWithParams('searchPosts', parameters);
 };
 
 // Search users by username/displayName
 // parameters {String} query - search term
 // returns = Array<{user_id: number, username: string, display_name: string}>
 export const searchUsers = async (parameters) => {
-  return await fetchWithParams('searchUsers', { parameters });
+  return await fetchWithParams('searchUsers', parameters);
 };
 
 // Search communities by name/description
 // parameters {String} query - search term
 // returns = Array<{community_id: number, name: string, description: string, memberCount: number}>
 export const searchCommunities = async (parameters) => {
-  return await fetchWithParams('searchCommunities', { parameters });
+  return await fetchWithParams('searchCommunities', parameters);
 };
 
 // GET CALLS BELOW <------------------------------------------------------------------------>
@@ -70,18 +70,18 @@ export const getUser = async (parameters) => {
 };
 
 // Get users in a community
-export const getCommunityMembers = async (communityId) => {
-  return await fetchWithParams("getCommunityMembers", { id: communityId });
+export const getCommunityMembers = async (parameters) => {
+  return await fetchWithParams("getCommunityMembers", parameters);
 };
 
 // Get followers of a user
-export const getUserFollowers = async (userId) => {
-  return await fetchWithParams("getUserFollowers", { id: userId });
+export const getUserFollowers = async (parameters) => {
+  return await fetchWithParams("getUserFollowers", parameters);
 };
 
 // Get users the user is following
-export const getUserFollowing = async (userId) => {
-  return await fetchWithParams("getUserFollowing", { id: userId });
+export const getUserFollowing = async (parameters) => {
+  return await fetchWithParams("getUserFollowing", parameters);
 };
 
 // parameters = { user_id: 123 } Returns list of communities that specified user is in (id, name, picture)
