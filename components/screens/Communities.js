@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from "../../services/firebase/useAuth";
 
 // Sub Components
 import CommunityList from '../sub_components/CommunityList';
@@ -49,6 +50,7 @@ const RecommendedCommunityCards = [
 ];
 
 export default function Communities({ navigation }) {
+  const {user} = useAuth();
   return (
     <View style={styles.pageContainer}>
       {/* Recommended Communities */}
@@ -76,7 +78,9 @@ export default function Communities({ navigation }) {
       {/* Communities You’re Following */}
       <Text style={styles.sectionTitle}>Communities You're Following</Text>
       <View style={styles.communityListContainer}>
-        <CommunityList navigation={navigation} />
+        <CommunityList 
+        userId = {user?.uid}
+        navigation={navigation} />
       </View>
     </View>
   );

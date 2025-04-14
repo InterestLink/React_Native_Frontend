@@ -64,7 +64,6 @@ export default function ChatScreen({ route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Chat with {conversationName}</Text>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

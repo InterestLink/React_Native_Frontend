@@ -18,11 +18,9 @@ const Settings = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      console.log("User signed out successfully");
-      // Rest navigation stack and go to login screen
-      navigation.navigate("Login");
+      console.log("Signed out successfully");
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error("Sign out failed:", error);
       Alert.alert("Sign Out Failed", error.message);
     }
   };

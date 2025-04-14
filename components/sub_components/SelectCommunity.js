@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet, ActivityIndicator, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import CommunityCard from './CommunityCard';
 import { getUserCommunities } from '../../services/api.js';
 
@@ -15,20 +14,16 @@ const styles = StyleSheet.create({
   },
 });
 
-
-export default function CommunityList({ userId }) {
-  const navigation = useNavigation();
+export default function SelectCommunity({ userId, onCommunitySelect }) {
   const [communities, setCommunities] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Just for dev testing fallback
   const idToUse = userId || 1;
 
   useEffect(() => {
     const fetchCommunities = async () => {
       try {
         const data = await getUserCommunities({ user_id: idToUse });
-        console.log('Fetched data:', data);
         const list = Array.isArray(data) ? data : data.communities || [];
         setCommunities(list);
       } catch (error) {
@@ -39,7 +34,6 @@ export default function CommunityList({ userId }) {
     };
 
     if (idToUse) {
-      console.log('Fetching communities for user:', idToUse);
       fetchCommunities();
     }
   }, [idToUse]);
@@ -72,20 +66,20 @@ export default function CommunityList({ userId }) {
 
   return (
     <View style={styles.pageContainer}>
-      <ScrollView
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={styles.content}>
         {communities.map((community) => (
-          <CommunityCard 
-            key={community.community_id} 
-            name={community.name} 
-            icon={community.community_picture} 
-            onPress={() => navigation.navigate('CommunityPage', { community })}
+          <CommunityCard
+            key={community.community_id}
+            name={community.name}
+            icon={community.community_picture}
+            onPress={() => {
+              if (onCommunitySelect) {
+                onCommunitySelect(community);
+              }
+            }}
           />
         ))}
       </ScrollView>
     </View>
   );
 }
-

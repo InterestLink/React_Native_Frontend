@@ -12,7 +12,7 @@ export default function DirectMessages({ navigation }) {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.conversation}
-      onPress={() => navigation.navigate('ChatScreen', { conversationName: item.name})}
+      onPress={() => navigation.navigate('Messages', { screen: 'ChatScreen', params: item.name})}
     >
       <View style={styles.iconContainer}>
         <Image source={{ uri: item.icon }} style={styles.icon} />
@@ -26,7 +26,6 @@ export default function DirectMessages({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Direct Messages</Text>
       <FlatList
         data={conversations}
         renderItem={renderItem}

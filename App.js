@@ -3,36 +3,45 @@ import MainContainer from "./components/MainContainer";
 import DefaultHome from "./components/screens/DefaultHome";
 import Login from "./components/screens/Login";
 import { auth } from "./services/firebase/firebase"; // Importing auth from firebase
+import { onAuthStateChanged } from "firebase/auth"; // Import firebase function for auth state
 
-function App() {
-  const [isFirstTimeUser] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track if the user is logged in
+  const [loading, setLoading] = useState(true); // Track loading state
 
-  // Firebase test
+  // Firebase auth state persistence
   useEffect(() => {
-    console.log("Firebase auth object:", auth);
-
-    // Safety check
-    if (!auth) {
-      console.error("Firebase auth not initialized!");
-      return;
-    }
-
-    // Check auth state persistence
-    auth.onAuthStateChanged((user) => {
-      console.log("Current user:", user);
+    // Check the auth state when the app first loads
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User logged in:", user.uid);
+        setIsLoggedIn(true); // Set the state to logged in
+      } else {
+        console.log("No user logged in");
+        setIsLoggedIn(false); // No user logged in
+      }
+      setLoading(false); // Done with loading after checking auth state
     });
-  }, []); // Empty dependency array = runs once on mount
 
-  if (isFirstTimeUser) {
-    return <DefaultHome />;
+    // Clean up the subscription when the component unmounts
+    return () => unsubscribe();
+  }, []);
+
+  // If we're still loading, display a loading screen or empty component
+  if (loading) {
+    return null; // Or you can return a loading spinner here
   }
 
-  return isLoggedIn ? (
+  // Handle first-time user check (optional, can be based on Firebase logic)
+  const isFirstTimeUser = false; // Add your own first-time user logic if needed
+
+  return isFirstTimeUser ? (
+    <DefaultHome />
+  ) : isLoggedIn ? (
+    // If logged in, show the MainContainer
     <MainContainer />
   ) : (
+    // If not logged in, show the Login screen
     <Login onLogin={() => setIsLoggedIn(true)} />
   );
 }
-
-export default App;

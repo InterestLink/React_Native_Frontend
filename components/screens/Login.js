@@ -13,13 +13,18 @@ import { auth } from "../../services/firebase/firebase"; // Importing auth from 
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInAnonymously,
 } from "firebase/auth";
 import { useFonts } from "expo-font"; // Importing useFonts from expo-font
+import { postUser } from "../../services/api.js"
+import { createGuestUser } from "../../services/api.js"
 
 export default function Login({ navigation, onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState(""); // Username state
+  const [displayName, setDisplayName] = useState(""); // Display name state
   const [isSignup, setIsSignup] = useState(false); // Toggle between modes
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
@@ -29,8 +34,8 @@ export default function Login({ navigation, onLogin }) {
       return;
     }
 
-    if (isSignup && password !== confirmPassword) {
-      Alert.alert("Error", "Passwords don't match!");
+    if (isSignup && (!username || !displayName || password !== confirmPassword)) {
+      Alert.alert("Error", "Please fill in all fields and make sure passwords match!");
       return;
     }
 
@@ -38,7 +43,14 @@ export default function Login({ navigation, onLogin }) {
     try {
       if (isSignup) {
         // Signup
-        await createUserWithEmailAndPassword(auth, email, password);
+        const { user} = await createUserWithEmailAndPassword(auth, email, password);
+        postUser({
+          user_id: user.uid,
+          email: email,
+          username: username,
+          display_name: displayName,
+          profile_picture: "https://fastly.picsum.photos/id/866/200/300",
+        })
         Alert.alert("Success", "Account created successfully!");
       } else {
         // Login
@@ -54,9 +66,19 @@ export default function Login({ navigation, onLogin }) {
     }
   };
 
-  const handleGuestLogin = () => {
-    console.log("Continuing as guest");
-    onLogin();
+  const handleGuestLogin = async () => {
+    try {
+      setIsLoading(true);
+      const { user } = await signInAnonymously(auth);
+      console.log("Anonymous user created with ID:", user.uid);
+      createGuestUser({guestId: user.uid})
+      onLogin(); // Proceed with guest flow
+    } catch (error) {
+      console.error("Anonymous login failed:", error);
+      Alert.alert("Guest Error", "Couldn't start guest session");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const [fontsLoaded] = useFonts({
@@ -80,6 +102,27 @@ export default function Login({ navigation, onLogin }) {
         keyboardType="email-address"
         autoCapitalize="none"
       />
+
+      {/* Username Field (Signup only) */}
+      {isSignup && (
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+        />
+      )}
+
+      {/* Display Name Field (Signup only) */}
+      {isSignup && (
+        <TextInput
+          style={styles.input}
+          placeholder="Display Name"
+          value={displayName}
+          onChangeText={setDisplayName}
+        />
+      )}
 
       {/* Password Field */}
       <TextInput
@@ -121,8 +164,8 @@ export default function Login({ navigation, onLogin }) {
       </TouchableOpacity>
 
       {/* Guest Login */}
-      <TouchableOpacity onPress={handleGuestLogin} style={styles.guestButton}>
-        <Text style={styles.guestText}>Continue as Guest</Text>
+      <TouchableOpacity onPress={handleGuestLogin} style={styles.guestButton} disabled={isLoading}>
+        <Text style={styles.guestText}>{isLoading ? "Loading...": "Continue as Guest"}</Text>
       </TouchableOpacity>
     </View>
   );
