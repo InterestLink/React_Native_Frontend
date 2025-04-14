@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import {
   postLikePost,
-  savePost,
+  postSavePost,
   getComments,
 } from "../../services/api";
 import { useAuth } from "../../services/firebase/useAuth";
@@ -23,16 +23,24 @@ const PostCard = ({
   image,
   tags,
   likeCount = 0,
-  likedByUser = false,
+  liked_by_user = false,
+  saved_by_user = false,
   profile_picture = null, 
 }) => {
   const { user } = useAuth();
   const userId = user?.uid || null;
 
   const [likes, setLikes] = useState(likeCount);
-  const [liked, setLiked] = useState(likedByUser);
-  const [saved, setSaved] = useState(false);
+  const [liked, setLiked] = useState(liked_by_user);
+  const [saved, setSaved] = useState(saved_by_user);
   const [comments, setComments] = useState([]);
+
+  // sync props to state on mount or prop change
+  useEffect(() => {
+    setLikes(likeCount);
+    setLiked(liked_by_user);
+    setSaved(saved_by_user);
+  }, [likeCount, liked_by_user, saved_by_user]);
   
   const handleLike = async () => {
     try {
@@ -46,7 +54,7 @@ const PostCard = ({
 
   const handleSave = async () => {
     try {
-      await savePost({ user_id: userId, post_id: id, save: !saved });
+      await postSavePost({ user_id: userId, post_id: id, saved: !saved });
       setSaved(!saved);
     } catch (error) {
       console.log("Save error:", error);
