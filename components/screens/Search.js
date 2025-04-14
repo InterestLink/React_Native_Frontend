@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, TextInput, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, TextInput, Image, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { getSearchPost, getSearchUser, getSearchCommunity } from '../../services/api';
 
 export default function Search({ navigation }) {
@@ -58,16 +58,48 @@ export default function Search({ navigation }) {
           }
         }}
       >
-        <Text style={styles.resultTitle}>
-          {searchType === 'users' ? item.name : item.title || item.name}
-        </Text>
-        <Text style={styles.resultSubtext}>
-          {searchType === 'users'
-            ? `@${item.username}`
-            : searchType === 'communities'
-            ? `${item.memberCount} members`
-            : `Posted in ${item.communityName}`}
-        </Text>
+        {searchType === 'users' && (
+          <View style={styles.userContainer}>
+            <Image
+              source={item.profile_picture 
+                ? { uri: item.profile_picture }
+                : require('../../assets/images/default_pfp.jpg')}
+              style={styles.profileImage}
+            />
+            <View style={styles.userInfo}>
+              <Text style={styles.resultTitle}>
+                {item.display_name || item.name}
+              </Text>
+              <Text style={styles.username}>@{item.username}</Text>
+            </View>
+          </View>
+        )}
+        
+        {searchType === 'communities' && (
+          <>
+            <Text style={styles.resultTitle}>{item.name}</Text>
+            <Text style={styles.resultSubtext}>
+              {item.memberCount} members
+            </Text>
+          </>
+        )}
+        
+        {searchType === 'posts' && (
+  <View style={styles.userContainer}>
+    <Image
+      source={item.profile_picture 
+        ? { uri: item.profile_picture }
+        : require('../../assets/images/default_pfp.jpg')}
+      style={styles.profileImage}
+    />
+    <View style={styles.userInfo}>
+      <Text style={styles.resultTitle}>{item.title}</Text>
+      <Text style={styles.resultSubtext}>
+        {item.display_name ? `${item.display_name} (@${item.username})` : `Posted by @${item.username}`} in {item.communityName}
+      </Text>
+    </View>
+  </View>
+)}
       </TouchableOpacity>
     );
     return (
@@ -170,5 +202,25 @@ export default function Search({ navigation }) {
       },
       loader: {
         marginTop: 30,
-      }
+      },
+      resultsContainer: {
+        paddingBottom: 20,
+      },
+      userContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      profileImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginRight: 10,
+      },
+      userInfo: {
+        flex: 1,
+      },
+      username: {
+        color: '#888',
+        fontSize: 14,
+      },
     });
