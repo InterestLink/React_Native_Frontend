@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, ActivityIndicator, RefreshControl } f
 import { getPosts } from '../../services/api';
 import PostCard from './PostCard';
 
-const PostList = ({ community_id }) => {
+const PostList = ({ userId }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -11,7 +11,7 @@ const PostList = ({ community_id }) => {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const data = await getPosts({ id: community_id, isUser: false });
+      const data = await getPosts({ id: userId, isUser: true }); // Fetch posts based on the userId passed from Profile component.
 
       // Log the API response to inspect the data structure
       console.log(data);
@@ -31,7 +31,7 @@ const PostList = ({ community_id }) => {
 
   useEffect(() => {
     fetchPosts();
-  }, [community_id]);
+  }, [userId]); // Fetch posts whenever userId changes.
 
   const onRefresh = () => {
     setRefreshing(true);

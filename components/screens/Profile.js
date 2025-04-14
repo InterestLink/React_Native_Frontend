@@ -81,12 +81,11 @@ const Profile = ({ route, navigation }) => {
   const renderContent = () => {
     switch (selectedView) {
       case "Posts":
-        return <PostList id={userId} isUser={true} navigation={navigation} />;
+        return <PostList userId={userId} navigation={navigation} />;
       case "Saved":
         return (
           <PostList
-            id={userId}
-            isUser={true}
+            userId={userId}
             navigation={navigation}
             userSaved={true}
           />
@@ -94,8 +93,7 @@ const Profile = ({ route, navigation }) => {
       case "Liked":
         return (
           <PostList
-            id={userId}
-            isUser={true}
+            userId={userId}
             navigation={navigation}
             userLiked={true}
           />
@@ -104,6 +102,7 @@ const Profile = ({ route, navigation }) => {
         return <Text>Here are the user's posts...</Text>;
     }
   };
+  
 
   if (loading) {
     return (
