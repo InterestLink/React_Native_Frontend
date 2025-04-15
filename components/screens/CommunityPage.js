@@ -1,8 +1,10 @@
-import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import React, {useEffect, useState} from "react";
+import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import ProfileList from "../sub_components/ProfileList";
 import PostList from "../sub_components/PostList";
+import { useAuth } from "../../services/firebase/useAuth";
+import { postJoinCommunity, getUserCommunities } from "../../services/api";
 
 // dummy screens for posts and members
 const PostsScreen = ({ community_id }) => (
@@ -24,6 +26,38 @@ export default function CommunityPage({ route }) {
   const { community } = route.params;
   const community_id = community.community_id;
 
+  const { user } = useAuth();
+  const userId = user?.uid || null;
+
+  const [joined, setJoined] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkMembership = async () => {
+      try {
+        const res = await getUserCommunities({user_id: userId});
+        const isJoined = res?.some((c) => c.community_id === community_id);
+        setJoined((isJoined));
+      } catch (err) {
+        console.error("Failed to fetch communities", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (userId) checkMembership();
+  }, [community_id, userId]);
+
+  const handleToggleJoin = async () => {
+    try {
+      console.log("Sending to API:", { user_id: userId, community_id, joined: !joined });
+      await postJoinCommunity({ user_id: userId, community_id, joined: !joined });
+      setJoined(!joined);
+    } catch (err) {
+      console.error("Join/Leave failed", err);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Community Header */}
@@ -32,6 +66,23 @@ export default function CommunityPage({ route }) {
       <Text style={styles.description}>
         More details about {community.name} will be displayed here.
       </Text>
+
+      {/* Join/Leave Button */}
+      {loading ? (
+        <ActivityIndicator size="small" color="#000" />
+      ) : (
+        <TouchableOpacity
+        style={[
+          styles.toggleButton,
+          joined && styles.activeToggle
+        ]}
+        onPress={handleToggleJoin}
+      >
+        <Text style={[styles.toggleText, joined && styles.activeToggleText]}>
+          {joined ? "Leave" : "Join"}
+        </Text>
+      </TouchableOpacity>
+    )}
 
       {/* Tabs for Posts and Members */}
       <View style={{ flex: 1, width: "100%" }}>
@@ -84,5 +135,24 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 16,
     fontWeight: "500",
+  },
+  toggleButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    backgroundColor: '#f8f8f8',
+  },
+  activeToggle: {
+    backgroundColor: 'tomato',
+    borderColor: 'tomato',
+  },
+  toggleText: {
+    color: '#333',
+    fontWeight: '500',
+  },
+  activeToggleText: {
+    color: '#fff',
   },
 });
