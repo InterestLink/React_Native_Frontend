@@ -12,7 +12,7 @@ const PostList = ({ route }) => {
   const isUser = routeData?.isUser || false;
   const userLiked = routeData?.userLiked || false;
   const userSaved = routeData?.userSaved || false;
-  console.warn('id',id, isUser);
+  console.warn(id, isUser);
   const fetchPosts = async () => {
     try {
       setLoading(true);

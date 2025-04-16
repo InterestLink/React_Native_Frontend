@@ -37,7 +37,7 @@ const Profile = ({ route, navigation }) => {
       setLoading(true);
       try {
         const fetched = await getUser({ user_id: userId, returnAll: true });
-
+        console.log('getUser', fetched);
         if (fetched) {
           setProfileData(fetched);
           if (!isOwnProfile && fetched?.is_following !== null) {

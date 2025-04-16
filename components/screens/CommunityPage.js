@@ -23,6 +23,7 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function CommunityPage({ route }) {
   const { community } = route.params;
+  console.warn(community, "------------------------");
   const community_id = community.community_id;
 
   const { user } = useAuth();

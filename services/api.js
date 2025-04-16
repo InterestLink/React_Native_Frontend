@@ -5,6 +5,7 @@ const fetchWithParams = async (endpoint, parameters) => {
   const params = new URLSearchParams(parameters);
   try {
     const response = await fetch(`${API_URL}${endpoint}?${params}`);
+    console.warn("API URL:", `${API_URL}${endpoint}?${params}`);
     const data = await response.json();
     return data;
   }catch(error){

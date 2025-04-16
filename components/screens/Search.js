@@ -68,6 +68,7 @@ export default function Search({ navigation }) {
               community_id: item.community_id || item.id,
               name: item.name || "Unnamed Community",
               icon: item.community_picture || null,
+              description: item.description || ""
             };
             navigation.navigate('CommunityPage', { community: communityData });
           } 
