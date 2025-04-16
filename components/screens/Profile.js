@@ -6,16 +6,13 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
-  Modal,
-  Button,
   Share,
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PostList from "../sub_components/PostList";
 import { useAuth } from "../../services/firebase/useAuth";
-import { getUser } from "../../services/api";
+import { getUser, postFollowUser } from "../../services/api";
 
 const Profile = ({ route, navigation }) => {
   const { user } = useAuth();
@@ -30,43 +27,52 @@ const Profile = ({ route, navigation }) => {
   const userId = routeData?.id || user.uid;
   const isOwnProfile = user?.uid === userId;
 
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
+
   useEffect(() => {
     const fetchProfile = async () => {
+      if (!userId) return;
+
+      setLoading(true);
       try {
-        if (!userId) return;
-        setLoading(true);
+        const fetched = await getUser({ user_id: userId, returnAll: true });
 
-        // Always fetch full profile data from backend
-        const fetchedData = await getUser({
-          user_id: userId,
-          returnAll: true,
-        });
-
-        if (fetchedData) {
-          setProfileData(fetchedData);
-        } else if (routeData) {
-          // fallback if API returns nothing
-          setProfileData(routeData);
+        if (fetched) {
+          setProfileData(fetched);
+          if (!isOwnProfile && fetched?.is_following !== null) {
+            setIsFollowing(fetched.is_following);
+          }
         } else {
-          console.warn("No valid profile data available");
+          setProfileData(routeData || null);
         }
-      } catch (error) {
-        console.error("Failed to load profile:", error);
+      } catch (err) {
+        console.error("Failed to load profile:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    if (isFocused) {
-      fetchProfile();
-    }
-
-    return () => {
-      setProfileData(null);
-      setLoading(true);
-    };
+    if (isFocused) fetchProfile();
   }, [isFocused, userId]);
 
+  const handleToggleFollow = async () => {
+    if (!user?.uid || !userId || isOwnProfile) return;
+    setFollowLoading(true);
+    try {
+      const res = await postFollowUser({
+        follower_id: user.uid,
+        following_id: userId,
+        follow: !isFollowing,
+      });
+      setIsFollowing((prev) => !prev);
+    } catch (err) {
+      console.error("Follow toggle failed:", err);
+    } finally {
+      setFollowLoading(false);
+    }
+  };
+  
   const handleShare = async () => {
     try {
       await Share.share({
@@ -207,6 +213,28 @@ const Profile = ({ route, navigation }) => {
           </Text>
         </TouchableOpacity>
 
+        {/* Follow/Unfollow */}
+        {!isOwnProfile && (
+          followLoading ? (
+          <ActivityIndicator size="small" color="#000" />
+           ) : (
+           <TouchableOpacity
+           style={[
+            styles.toggleButton,
+            isFollowing && styles.activeToggle
+          ]}
+          onPress={handleToggleFollow}
+          >
+            <Text style={[
+              styles.toggleText,
+              isFollowing && styles.activeToggleText
+              ]}>
+                {isFollowing ? "Unfollow" : "Follow"}
+                </Text>
+                </TouchableOpacity>
+                )
+                )}
+
         <View style={styles.statsContainer}>
           <TouchableOpacity
             style={styles.statItem}
@@ -276,6 +304,25 @@ const styles = StyleSheet.create({
   expandText: { color: "#007BFF" },
   settingsIconContainer: { position: "absolute", top: 16, right: 16 },
   settingsIcon: { width: 24, height: 24 },
+  toggleButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    backgroundColor: '#f8f8f8',
+  },
+  activeToggle: {
+    backgroundColor: 'tomato',
+    borderColor: 'tomato',
+  },
+  toggleText: {
+    color: '#333',
+    fontWeight: '500',
+  },
+  activeToggleText: {
+    color: '#fff',
+  },
 });
 
 export default Profile;
