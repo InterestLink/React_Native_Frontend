@@ -126,7 +126,7 @@ export const postLikePost = async (params) => postWithParams("postLikePost", par
 export const postSavePost = async (params) => postWithParams("postSavePost", params);
 
 // parameters = { follower_id, following_id, follow } true = add, false = remove
-export const postFollowUser = async (params) => postWithParams("followUser", params);
+export const postFollowUser = async (params) => postWithParams("postFollowUser", params);
 
 // parameters = { user_id, community_id, join } true = add, false = remove
 export const postJoinCommunity = async (params) => postWithParams("postJoinCommunity", params);

@@ -59,7 +59,7 @@ export default function ProfileList({ community_id }) {
       >
         {profiles.map((profile) => {
           const profileData = {
-            user_id: profile.user_id,
+            id: profile.user_id,
             display_name: profile.username || "Unnamed",
             icon: profile.profile_picture || null,
             username: profile.username || "Anonymous",
@@ -71,7 +71,7 @@ export default function ProfileList({ community_id }) {
           
           return (
             <ProfileCard
-              key={profile.user_id}
+              key={profileData.id}
               name={profileData.display_name}
               icon={profileData.icon}
               onPress={() =>
