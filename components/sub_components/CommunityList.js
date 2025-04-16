@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, ScrollView, StyleSheet, ActivityIndicator, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import CommunityCard from './CommunityCard';
 import { getUserCommunities } from '../../services/api.js';
 
@@ -20,29 +20,37 @@ export default function CommunityList({ userId }) {
   const navigation = useNavigation();
   const [communities, setCommunities] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Just for dev testing fallback
   const idToUse = userId || 1;
 
-  useEffect(() => {
-    const fetchCommunities = async () => {
-      try {
-        const data = await getUserCommunities({ user_id: idToUse });
-        console.log('Fetched data:', data);
-        const list = Array.isArray(data) ? data : data.communities || [];
-        setCommunities(list);
-      } catch (error) {
-        console.error('Failed to load communities:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
 
-    if (idToUse) {
-      console.log('Fetching communities for user:', idToUse);
+      const fetchCommunities = async () => {
+        try {
+          const data = await getUserCommunities({ user_id: idToUse });
+          console.log('Fetched data:', data);
+          const list = Array.isArray(data) ? data : data.communities || [];
+          if (isActive) {
+            setCommunities(list);
+          }
+        } catch (error) {
+          console.error('Failed to load communities:', error);
+        } finally {
+          if (isActive) {
+            setLoading(false);
+          }
+        }
+      };
+
+      setLoading(true);
       fetchCommunities();
-    }
-  }, [idToUse]);
+
+      return () => {
+        isActive = false; // cleanup in case the screen unfocuses mid-request
+      };
+    }, [idToUse])
+  );
 
   if (loading) {
     return (
