@@ -60,14 +60,34 @@ const Profile = ({ route, navigation }) => {
 
   const handleToggleFollow = async () => {
     if (!user?.uid || !userId || isOwnProfile) return;
+    
     setFollowLoading(true);
+    
     try {
       const res = await postFollowUser({
         follower_id: user.uid,
         following_id: userId,
         follow: !isFollowing,
       });
-      setIsFollowing((prev) => !prev);
+      
+      // Update isFollowing state
+      setIsFollowing(prev => !prev);
+      
+      // Directly update follower count based on action
+      if (isFollowing) {
+        // If unfollowing, decrease the follower count
+        setProfileData(prevData => ({
+          ...prevData,
+          followerCount: prevData.followerCount - 1,
+        }));
+      } else {
+        // If following, increase the follower count
+        setProfileData(prevData => ({
+          ...prevData,
+          followerCount: prevData.followerCount + 1,
+        }));
+      }
+      
     } catch (err) {
       console.error("Follow toggle failed:", err);
     } finally {
