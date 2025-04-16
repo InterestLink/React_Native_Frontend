@@ -38,11 +38,13 @@ const Profile = ({ route, navigation }) => {
       try {
         const fetched = await getUser({ user_id: userId, returnAll: true });
         console.log('getUser', fetched);
+        console.log("---------------------Followers array:", fetched.followers);
         if (fetched) {
           setProfileData(fetched);
-          if (!isOwnProfile && fetched?.is_following !== null) {
-            setIsFollowing(fetched.is_following);
-          }
+          if (!isOwnProfile && Array.isArray(fetched.followers)) {
+            const isFollowingUser = fetched.followers.includes(user.uid);
+            setIsFollowing(isFollowingUser);
+          }             
         } else {
           setProfileData(routeData || null);
         }
