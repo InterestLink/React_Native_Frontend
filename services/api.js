@@ -129,4 +129,4 @@ export const postSavePost = async (params) => postWithParams("postSavePost", par
 export const postFollowUser = async (params) => postWithParams("followUser", params);
 
 // parameters = { user_id, community_id, join } true = add, false = remove
-export const postJoinCommunity = async (params) => postWithParams("joinCommunity", params);
+export const postJoinCommunity = async (params) => postWithParams("postJoinCommunity", params);

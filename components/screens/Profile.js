@@ -27,8 +27,7 @@ const Profile = ({ route, navigation }) => {
   const [isBioExpanded, setIsBioExpanded] = useState(false);
 
   const isFocused = useIsFocused();
-
-  const userId = routeData?.user_id || user?.uid;
+  const userId = routeData?.id || user.uid;
   const isOwnProfile = user?.uid === userId;
 
   useEffect(() => {
@@ -81,23 +80,11 @@ const Profile = ({ route, navigation }) => {
   const renderContent = () => {
     switch (selectedView) {
       case "Posts":
-        return <PostList userId={userId} navigation={navigation} />;
+        return <PostList route={{ params: { data: { id: userId, isUser: true } } }} />
       case "Saved":
-        return (
-          <PostList
-            userId={userId}
-            navigation={navigation}
-            userSaved={true}
-          />
-        );
+        return <PostList route={{ params: { data: { id: userId, isUser: true, userSaved: true } } }} />
       case "Liked":
-        return (
-          <PostList
-            userId={userId}
-            navigation={navigation}
-            userLiked={true}
-          />
-        );
+        return <PostList route={{ params: { data: { id: userId, isUser: true, userLiked: true } } }} />
       default:
         return <Text>Here are the user's posts...</Text>;
     }

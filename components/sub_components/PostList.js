@@ -3,22 +3,26 @@ import { View, Text, FlatList, StyleSheet, ActivityIndicator, RefreshControl } f
 import { getPosts } from '../../services/api';
 import PostCard from './PostCard';
 
-const PostList = ({ userId }) => {
+const PostList = ({ route }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-
+  const routeData = route?.params?.data;
+  const id = routeData?.id || null;
+  const isUser = routeData?.isUser || false;
+  const userLiked = routeData?.userLiked || false;
+  const userSaved = routeData?.userSaved || false;
+  console.warn('id',id, isUser);
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const data = await getPosts({ id: userId, isUser: true }); // Fetch posts based on the userId passed from Profile component.
-
+      const data = await getPosts({ id: id, isUser: isUser }); // Fetch posts based on the id passed from Profile component.
       // Log the API response to inspect the data structure
       console.log(data);
 
       // Assuming the API returns an array of posts directly or wrapped in a response
       const postsArray = Array.isArray(data) ? data : Array.isArray(data?.body) ? data.body : [];
-
+      console.log('postsArray', postsArray);
       setPosts(postsArray);
     } catch (error) {
       console.error('Failed to fetch posts:', error);
@@ -31,7 +35,7 @@ const PostList = ({ userId }) => {
 
   useEffect(() => {
     fetchPosts();
-  }, [userId]); // Fetch posts whenever userId changes.
+  }, [id]); // Fetch posts whenever id changes.
 
   const onRefresh = () => {
     setRefreshing(true);

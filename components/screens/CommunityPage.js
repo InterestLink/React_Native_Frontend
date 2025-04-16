@@ -9,8 +9,7 @@ import { postJoinCommunity, getUserCommunities } from "../../services/api";
 // dummy screens for posts and members
 const PostsScreen = ({ community_id }) => (
   <View style={styles.tabContent}>
-    {/* Passing community_id to PostList and setting isUser to false */}
-    <PostList community_id={community_id} isUser={false} />
+    <PostList route={{ params: { data: { id: community_id, isUser: false } } }} />
   </View>
 );
 
